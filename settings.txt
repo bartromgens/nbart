@@ -1,0 +1,18 @@
+# Fullscreen: (0 = windowed, 1 = fullscreen)
+0
+# Horizontal resolution [px]: (0 = auto detect)
+0
+# Vertical resolution [px]: (0 = auto detect)
+0
+# Frames Per Second (default=60): 
+120
+# Number of Bodies (default=10):
+20
+# Internal RK4 Stepsize, smaller is more accuracte, larger is faster (default=0.05).
+0.05
+# Initial Simulation Speed (default=10);
+5
+# Line Draw Rate (default=3.0)
+1
+# Line Color Change Rate (default=100.0)
+100.0
