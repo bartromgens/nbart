@@ -11,7 +11,7 @@ DEPENDPATH = $$INCLUDEPATH
 
 INCLUDEPATH += /usr/include/boost
 
-LIBS += -L/usr/lib -lboost_system -lboost_thread
+LIBS += -L/usr/lib
 LIBS += -lSDL_image -lSDL -lSDL_ttf
 
 QMAKE_CXXFLAGS += -std=c++0x
