@@ -10,9 +10,9 @@
 
 namespace gf {
 
-	SDL_Surface *load_image( std::string filename , bool transparent);
-	void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination );
-	SDL_Surface* init(SDL_Surface *screen, std::string windowtitle);
+  SDL_Surface* load_image(std::string filename, bool transparent);
+  void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination);
+  SDL_Surface* init(SDL_Surface* screen, std::string windowtitle);
 
 }
 

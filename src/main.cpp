@@ -136,7 +136,6 @@ int main(int argc, char *argv[]) {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
   const int FRAMES_PER_SECOND = import::getFPS();
-  const int N_BODIES = import::getNBodies();
 
   // initialize SDL objects
   SDL_Surface *screen = NULL;
