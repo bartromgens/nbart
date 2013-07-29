@@ -11,7 +11,7 @@
 */
 class DrawableBody : public Drawable {
 public:
-    DrawableBody(SDL_Surface *screen, std::string imageloc);
+    DrawableBody(SDL_Surface* screen, std::string imageloc);
     
 protected:
 
