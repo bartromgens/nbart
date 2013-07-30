@@ -410,7 +410,8 @@ int main(int argc, char *argv[])
 
           fieldStrength = pow(fieldStrength, 1.0/3.0);
 
-          if (fieldStrength > 255) {
+          if (fieldStrength > 255)
+          {
             fieldStrength = 255;
           }
           //cout << fieldStrength << endl;

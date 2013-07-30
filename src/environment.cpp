@@ -1,4 +1,6 @@
 #include <cmath>
+#include <functional>
+#include <thread>
 
 #include "importsettings.hpp"
 
@@ -21,6 +23,8 @@ Environment::~Environment() {
 void
 Environment::addBody(Body* body)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   m_bodies.push_back(body);
 }
 
@@ -28,6 +32,8 @@ Environment::addBody(Body* body)
 void
 Environment::addMasslessBody(Body* body)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   m_masslessBodies.push_back(body);
 }
 
@@ -35,6 +41,8 @@ Environment::addMasslessBody(Body* body)
 void
 Environment::clearAllBodies()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   m_bodies.clear();
   m_masslessBodies.clear();
 }
@@ -43,6 +51,8 @@ Environment::clearAllBodies()
 void
 Environment::drawBodies()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   for (std::size_t i = 0; i < m_bodies.size(); i++)
   {
     m_bodies[i]->draw();
@@ -57,6 +67,8 @@ Environment::drawBodies()
 void
 Environment::drawTrajectories()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   for (std::size_t i = 0; i < m_bodies.size(); i++)
   {
     m_bodies[i]->drawTrajectory();
@@ -67,23 +79,41 @@ Environment::drawTrajectories()
 void
 Environment::oneStep()
 {
+  std::thread t(&Environment::oneStepImpl, this);
+  t.detach();
+}
+
+
+void
+Environment::oneStepImpl()
+{
   for (std::size_t i = 0; i < m_bodies.size(); i++)
   {
     m_bodies[i]->oneStep();
-  }
-  for (std::size_t i = 0; i < m_bodies.size(); i++)
-  {
-    m_bodies[i]->updateState();
   }
   for (std::size_t i = 0; i < m_masslessBodies.size(); i++)
   {
     m_masslessBodies[i]->oneStep();
   }
+
+  updateState();
+}
+
+
+void
+Environment::updateState()
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  for (std::size_t i = 0; i < m_bodies.size(); i++)
+  {
+    m_bodies[i]->updateState();
+  }
+
   for (std::size_t i = 0; i < m_masslessBodies.size(); i++)
   {
     m_masslessBodies[i]->updateState();
   }
-
 }
 
 
@@ -93,6 +123,9 @@ Environment::getStateDerivative(const std::array<double, 4>& x)
   double r;
   double mass;
   double x12[2];
+
+  std::array<double, 4> stateDerivative;
+  stateDerivative.fill(0.0);
 
   stateDerivative[2] = 0.0;
   stateDerivative[3] = 0.0;

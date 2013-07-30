@@ -60,7 +60,7 @@ Integrator::oneStep()
 
   for (std::size_t i = 0; i < x0.size(); i++)
   {
-    x1[i] = x0[i] + 1./6. * (k1[i]+2*k2[i]+2*k3[i]+k4[i]);
+    x1[i] = x0[i] + 1.0/6.0 * (k1[i]+2*k2[i]+2*k3[i]+k4[i]);
   }
 }
 
@@ -68,10 +68,7 @@ Integrator::oneStep()
 void
 Integrator::updateState()
 {
-  for (std::size_t j = 0; j < x0.size(); j++)
-  {
-    x0[j] = x1[j];
-  }
+  x0 = x1;
 }
 
 

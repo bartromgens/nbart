@@ -60,15 +60,13 @@ Body::oneStep()
 void
 Body::updateState()
 {
-  for (std::size_t i = 0; i < x.size(); i++)
-  {
-    x[i] = xNew[i];
-  }
+  x = xNew;
 
   if (nStep%(10*linerate) == 0)
   {
     trajectory->addPoint(x[0],x[1]);
   }
+
   setScreenCenterPos((int)x[0],(int)x[1]);
   nStep++;
 }
