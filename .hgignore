@@ -4,3 +4,6 @@ build/*
 nbart.pro.user
 nbart
 Makefile
+screenshot.bmp
+nbart.creator.user
+doc/video/nBart_Demo.mp4
