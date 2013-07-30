@@ -14,23 +14,29 @@
 
 using namespace std;
 
-int factorial(int i) {
+int factorial(int i)
+{
   if (i <= 1)
     return i;
   return (i * factorial(i - 1));
 }
 
-double random(double start, double end) {
+
+double random(double start, double end)
+{
   double randomDouble = start+(end-start)*rand()/(RAND_MAX + 1.0);
   return randomDouble;
 }
 
 // Orbiting Pattern
-vector<Body* > createPattern1(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies, double mass) {
+vector<Body* >
+createPattern1(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies, double mass)
+{
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
-  for (int i = 0; i < nBodies; i++) {
+  for (int i = 0; i < nBodies; i++)
+  {
     Body* body = new Body(environment, screen, "./data/blurball.png");
     environment->addBody(body);
     bodyvec.push_back(body);
@@ -47,11 +53,14 @@ vector<Body* > createPattern1(vector<Body* > bodyvec, Environment* environment, 
 }
 
 // Random pattern
-vector<Body* > createPattern2(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies) {
+vector<Body* >
+createPattern2(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+{
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
-  for (int i = 0; i < nBodies; i++) {
+  for (int i = 0; i < nBodies; i++)
+  {
     Body* body = new Body(environment, screen, "./data/whiteball.png");
     environment->addBody(body);
     bodyvec.push_back(body);
@@ -65,11 +74,14 @@ vector<Body* > createPattern2(vector<Body* > bodyvec, Environment* environment, 
 }
 
 // Spiral Pattern
-vector<Body* > createPattern3(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies) {
+vector<Body* >
+createPattern3(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+{
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
-  for (int i = 0; i < nBodies; i++) {
+  for (int i = 0; i < nBodies; i++)
+  {
     Body* body = new Body(environment, screen, "./data/whiteball.png");
     environment->addBody(body);
     bodyvec.push_back(body);
@@ -89,7 +101,9 @@ vector<Body* > createPattern3(vector<Body* > bodyvec, Environment* environment, 
 }
 
 // Strange numero uno
-vector<Body* > createPattern4(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies) {
+vector<Body* >
+createPattern4(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+{
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
@@ -110,11 +124,14 @@ vector<Body* > createPattern4(vector<Body* > bodyvec, Environment* environment, 
 }
 
 // Strange numero uno
-vector<Body* > createPattern5(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies) {
+vector<Body* >
+createPattern5(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+{
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
-  for (int i = 0; i < nBodies; i++) {
+  for (int i = 0; i < nBodies; i++)
+  {
     Body* body = new Body(environment, screen, "./data/whiteball.png");
     environment->addBody(body);
     bodyvec.push_back(body);
@@ -131,8 +148,9 @@ vector<Body* > createPattern5(vector<Body* > bodyvec, Environment* environment, 
   return bodyvec;
 }
 
-int main(int argc, char *argv[]) {
 
+int main(int argc, char *argv[])
+{
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
   const int FRAMES_PER_SECOND = import::getFPS();
@@ -220,6 +238,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
+
   int startFPS = SDL_GetTicks();
 
   //While the user hasn't quit
@@ -252,7 +271,8 @@ int main(int argc, char *argv[]) {
 
       switch(event.type){
       case SDL_KEYDOWN:
-        switch(event.key.keysym.sym){
+        switch(event.key.keysym.sym)
+        {
         case SDLK_UP:
           simSpeed *= 1.1;
           break;
@@ -370,14 +390,17 @@ int main(int argc, char *argv[]) {
 
     gf::apply_surface( 0, 0 , background, screen );
 
-    if (!pause) {
-      for (int i = 0 ; i < simSpeed*5 ; i++) {
+    if (!pause)
+    {
+      for (int i = 0 ; i < simSpeed*5 ; i++)
+      {
         environment->oneStep();
       }
     }
 
     // Draw Field
-    if (showField) {
+    if (showField)
+    {
       for (int i = 0; i < V_TILES; i++)
       {
         for (int j = 0; j < H_TILES; j++)
