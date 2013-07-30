@@ -7,9 +7,9 @@
 #include "body.hpp"
 
 Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
-  : x(4, 0.0),
-    xNew(4, 0.0),
-    para(4, 0.0)
+  : x(),
+    xNew(),
+    para()
 {
   drawbody = new DrawableBody(screen, imageloc);
   trajectory = new Trajectory(screen);
@@ -131,15 +131,14 @@ Body::getMass()
 }
 
 
-std::vector<double>
+std::array<double, 4>
 Body::getState()
 {
   return x;
 }
 
 
-std::vector<double>
-Body::getParameters()
+std::array<double, 2> Body::getParameters()
 {
   return para;
 }

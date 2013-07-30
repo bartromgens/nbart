@@ -2,18 +2,18 @@
 
 using namespace std;
 
-Integrator::Integrator(Environment* environment, const std::vector<double>& x0, double stepsize)
+Integrator::Integrator(Environment* environment, const std::array<double, 4> &x0, double stepsize)
   : m_environment(environment),
     m_stepsize(stepsize),
     x0(x0),
-    x1(4, 0.0),
-    px0(4, 0.0),
-    px1(4, 0.0)
+    x1(),
+    px0(),
+    px1()
 {
 }
 
 
-std::vector<double>
+std::array<double, 4>
 Integrator::integrate(double tend)
 {
   m_steps = tend/m_stepsize;
@@ -30,20 +30,6 @@ Integrator::integrate(double tend)
 void
 Integrator::oneStep()
 {
-  std::vector<double> x0k1(4, 0.0);
-  std::vector<double> x0k2(4, 0.0);
-  std::vector<double> x0k3(4, 0.0);
-
-  std::vector<double> k1(4, 0.0);
-  std::vector<double> k2(4, 0.0);
-  std::vector<double> k3(4, 0.0);
-  std::vector<double> k4(4, 0.0);
-
-  std::vector<double> pforce1;
-  std::vector<double> pforce2;
-  std::vector<double> pforce3;
-  std::vector<double> pforce4;
-
   pforce1 = m_environment->getStateDerivative(x0);
   for (std::size_t j = 0; j < x0.size(); j++)
   {

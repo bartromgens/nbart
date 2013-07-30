@@ -1,9 +1,11 @@
 #ifndef INTEGRATOR_H_
 #define INTEGRATOR_H_
 
+#include <algorithm>
+#include <array>
+#include <cmath>
 #include <iostream>
 #include <fstream>
-#include <cmath>
 
 #include "environment.hpp"
 
@@ -16,8 +18,8 @@
 class Integrator
 {
 public:
-  Integrator(Environment* m_environment, const std::vector<double>& x0, double stepsize);
-  std::vector<double> integrate(double m_tEnd);
+  Integrator(Environment* m_environment, const std::array<double, 4>& x0, double stepsize);
+  std::array<double, 4> integrate(double m_tEnd);
   void setStepSize(double hin);
 
   void updateState();
@@ -31,11 +33,25 @@ private:
   double m_stepsize;
   double m_tEnd;
 
-  std::vector<double> x0;
-  std::vector<double> x1;
+  std::array<double, 4> x0;
+  std::array<double, 4> x1;
 
-  std::vector<double> px0;
-  std::vector<double> px1;
+  std::array<double, 4> px0;
+  std::array<double, 4> px1;
+
+  std::array<double, 4> x0k1;
+  std::array<double, 4> x0k2;
+  std::array<double, 4> x0k3;
+
+  std::array<double, 4> k1;
+  std::array<double, 4> k2;
+  std::array<double, 4> k3;
+  std::array<double, 4> k4;
+
+  std::array<double, 4> pforce1;
+  std::array<double, 4> pforce2;
+  std::array<double, 4> pforce3;
+  std::array<double, 4> pforce4;
 
   int m_steps;
 };

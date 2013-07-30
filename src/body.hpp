@@ -1,6 +1,7 @@
 #ifndef BODY_H_
 #define BODY_H_
 
+#include <array>
 #include <iostream>
 #include <vector>
 
@@ -38,8 +39,8 @@ public:
   void setRadius(double radius);
 
   double getMass();
-  std::vector<double> getState();
-  std::vector<double> getParameters();
+  std::array<double, 4> getState();
+  std::array<double, 2> getParameters();
 protected:
 
 private:
@@ -49,9 +50,9 @@ private:
   Trajectory* trajectory;
 
   double stepsize;
-  std::vector<double> x;
-  std::vector<double> xNew;
-  std::vector<double> para; // {mass, radius}
+  std::array<double, 4> x;
+  std::array<double, 4> xNew;
+  std::array<double, 2> para; // {mass, radius}
   int nStep;
   int linerate;
 

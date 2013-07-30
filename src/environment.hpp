@@ -1,6 +1,7 @@
 #ifndef ENVIRONMENT_H_
 #define ENVIRONMENT_H_
 
+#include <array>
 #include <vector>
 
 #include "body.hpp"
@@ -26,7 +27,7 @@ public:
   void drawBodies();
   void drawTrajectories();
 
-  std::vector<double> getStateDerivative(const std::vector<double> &x0);
+  std::array<double, 4> getStateDerivative(const std::array<double, 4> &x0);
 
   double getFieldStrength(double x, double y);
   double getEnergy();
@@ -40,6 +41,14 @@ private:
   std::vector<Body*> m_masslessBodies;
   int hres, vres;
   int m_nBodies;
+
+  std::array<double, 4> x1;
+  std::array<double, 4> x2;
+
+  std::array<double, 2> para1;
+  std::array<double, 2> para2;
+
+  std::array<double, 4> stateDerivative;
 };
 
 #endif /* ENVIRONMENT_H_ */
