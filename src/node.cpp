@@ -1,8 +1,8 @@
 #include "node.hpp"
 
-using namespace std;
 
-Node::Node(int x, int y) {
+Node::Node(int x, int y)
+{
   this->x = x;
   this->y = y;
   wall = false;
@@ -18,38 +18,59 @@ Node::Node(int x, int y) {
   updateColor();
 }
 
-int Node::getX() {
+
+int
+Node::getX()
+{
   return x;
 }
 
-Color Node::getColor() {
+
+Color
+Node::getColor()
+{
   return color;
 }
 
-void Node::changeWall() {
+
+void Node::changeWall()
+{
   wall = !wall;
   updateColor();
 }
 
-void Node::setWall(bool yesno) {
+
+void Node::setWall(bool yesno)
+{
   wall = yesno;
   updateColor();
 }
 
-void Node::setPath(bool yesno) {
+
+void
+Node::setPath(bool yesno)
+{
   path = yesno;
   updateColor();
 }
 
-void Node::setOpen(bool yesno) {
+
+void
+Node::setOpen(bool yesno)
+{
   opened = yesno;
 }
 
-bool Node::getOpen() {
+
+bool
+Node::getOpen()
+{
   return opened;
 }
 
-void Node::setClose(bool yesno) {
+
+void
+Node::setClose(bool yesno) {
   closed = yesno;
   if (yesno) {
     opened = false;
@@ -83,24 +104,34 @@ Node::setTarget(bool yesno)
 
 
 void
-Node::updateColor() {
-  if (wall==true) {
+Node::updateColor()
+{
+  if (wall==true)
+  {
     color.r = 80;
     color.g = 80;
     color.b = 255;
-  } else if (target==true) {
+  }
+  else if (target==true)
+  {
     color.r = 255;
     color.g = 255;
     color.b = 255;
-  } else if (start==true) {
+  }
+  else if (start==true)
+  {
     color.r = 0;
     color.g = 0;
     color.b = 0;
-  } else if (closed==true) {
+  }
+  else if (closed==true)
+  {
     color.r = 255;
     color.g = 255;
     color.b = 255;
-  } else {
+  }
+  else
+  {
     color.r = 25;
     color.g = 100;
     color.b = 25;
@@ -116,27 +147,31 @@ Node::updateColor() {
 
 void
 Node::tryToOpen() {
-  if ( wall==false && closed == false) {
+  if ( wall==false && closed == false)
+  {
     opened = true;
   };
 }
 
 
 void
-Node::setParent(int x, int y) {
+Node::setParent(int x, int y)
+{
   parent.x = x;
   parent.y = y;
 }
 
 
 Coordinate
-Node::getParent() {
+Node::getParent()
+{
   return parent;
 }
 
 
 void
-Node::calcFGH(Coordinate start, Coordinate end, std::vector<std::vector<Node*> > field) {
+Node::calcFGH(Coordinate start, Coordinate end, std::vector<std::vector<Node*> > field)
+{
   f = 0; g = 0; h = 0;
   Coordinate parenttemp;
   parenttemp = parent;

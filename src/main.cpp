@@ -12,7 +12,6 @@
 #include "environment.hpp"
 #include "node.hpp"
 
-using namespace std;
 
 int factorial(int i)
 {
@@ -29,8 +28,8 @@ double random(double start, double end)
 }
 
 // Orbiting Pattern
-vector<Body* >
-createPattern1(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies, double mass)
+std::vector<Body* >
+createPattern1(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies, double mass)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
@@ -53,8 +52,8 @@ createPattern1(vector<Body* > bodyvec, Environment* environment, SDL_Surface* sc
 }
 
 // Random pattern
-vector<Body* >
-createPattern2(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+std::vector<Body* >
+createPattern2(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
@@ -74,8 +73,8 @@ createPattern2(vector<Body* > bodyvec, Environment* environment, SDL_Surface* sc
 }
 
 // Spiral Pattern
-vector<Body* >
-createPattern3(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+std::vector<Body* >
+createPattern3(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
@@ -101,8 +100,8 @@ createPattern3(vector<Body* > bodyvec, Environment* environment, SDL_Surface* sc
 }
 
 // Strange numero uno
-vector<Body* >
-createPattern4(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+std::vector<Body* >
+createPattern4(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
@@ -124,8 +123,8 @@ createPattern4(vector<Body* > bodyvec, Environment* environment, SDL_Surface* sc
 }
 
 // Strange numero uno
-vector<Body* >
-createPattern5(vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
+std::vector<Body* >
+createPattern5(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
@@ -158,7 +157,7 @@ int main(int argc, char *argv[])
   // initialize SDL objects
   SDL_Surface *screen = NULL;
   screen = gf::init(screen, "SDL template Title");
-  cout << "SDL screen initialized... \n";
+  std::cout << "SDL screen initialized... " << std::endl;
   SDL_Event event;
 
   // initialze auxiliary
@@ -175,14 +174,14 @@ int main(int argc, char *argv[])
   double newMass = 3.0;
 
   Environment* environment = new Environment(screen);
-  cout << "Environment created... \n";
+  std::cout << "Environment created... " << std::endl;
 
-  vector<Body* > bodyvec;
-  vector<Body* >::iterator drawit;
+  std::vector<Body* > bodyvec;
+  std::vector<Body* >::iterator drawit;
 
-  cout << "Body vectors initialized... \n";
+  std::cout << "Body vectors initialized... " << std::endl;
 
-//  const int nBodies = N_BODIES;
+  //  const int nBodies = N_BODIES;
   //bodyvec = createPattern4(bodyvec, environment, screen, nBodies);
   //bodyvec = createPattern2(bodyvec, environment, screen, nBodies);
   //bodyvec = createPattern3(bodyvec, environment, screen, nBodies);
@@ -193,11 +192,11 @@ int main(int argc, char *argv[])
   //bodyvec.back()->setPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
   //bodyvec.back()->setVelocity(0,0);
   //bodyvec.back()->setRadius(25);
-  cout << "Bodies created... \n";
+  std::cout << "Bodies created... " << std::endl;
 
   SDL_Surface *background = NULL;
   background = gf::load_image( "./data/black.png" , false);
-  cout << "Background loaded... \n";
+  std::cout << "Background loaded..." << std::endl;
 
   const int TILE_SIZE = 20;
   const int BORDER_SIZE = 2;
@@ -205,7 +204,7 @@ int main(int argc, char *argv[])
   const int V_TILES = SCREEN_HEIGHT/TILE_SIZE;
 
   // initialze field
-  vector<vector<Node*> > field(V_TILES, vector<Node*>(H_TILES));
+  std::vector<std::vector<Node*> > field(V_TILES, std::vector<Node*>(H_TILES));
   for (int i = 0; i < V_TILES; i++)
   {
     for (int j = 0; j < H_TILES; j++)
@@ -340,12 +339,12 @@ int main(int argc, char *argv[])
         if ( event.button.button == SDL_BUTTON_LEFT)
         {
           SDL_GetMouseState(&mousedownX, &mousedownY);
-          cout << "Left Mouse Down..." << endl;
+          std::cout << "Left Mouse Down..." << std::endl;
         }
         else if ( event.button.button == SDL_BUTTON_RIGHT)
         {
           SDL_GetMouseState(&mousedownX, &mousedownY);
-          cout << "Right Mouse Down..." << endl;
+          std::cout << "Right Mouse Down..." << std::endl;
         }
         else if( event.button.button == SDL_BUTTON_WHEELUP )
         {
@@ -364,7 +363,7 @@ int main(int argc, char *argv[])
         if ( event.button.button == SDL_BUTTON_LEFT)
         {
           SDL_GetMouseState(&mouseupX, &mouseupY);
-          cout << "Left Mouse Up..." << endl;
+          std::cout << "Left Mouse Up..." << std::endl;
           Body* body = new Body(environment, screen, "./data/blurball.png");
           environment->addBody(body);
           bodyvec.push_back(body);
@@ -376,7 +375,7 @@ int main(int argc, char *argv[])
         else if ( event.button.button == SDL_BUTTON_RIGHT)
         {
           SDL_GetMouseState(&mouseupX, &mouseupY);
-          cout << "Right Mouse Up..." << endl;
+          std::cout << "Right Mouse Up..." << std::endl;
           Body* body = new Body(environment, screen, "./data/greenball.png");
 
           body->setMass(0.1);
@@ -405,7 +404,7 @@ int main(int argc, char *argv[])
       {
         for (int j = 0; j < H_TILES; j++)
         {
-//          Color tempcol = field[i][j]->getColor();
+          //          Color tempcol = field[i][j]->getColor();
           SDL_FillRect( screen, &outtiles[i][j], SDL_MapRGB( screen->format, 0, 0, 0) );
           double fieldStrength = environment->getFieldStrength(j*TILE_SIZE+TILE_SIZE/2.0,i*TILE_SIZE+TILE_SIZE/2.0) * 3.0e7;
 
@@ -443,7 +442,7 @@ int main(int argc, char *argv[])
     if (frame%FRAMES_PER_SECOND == 0)
     {
       int timeFPSframes = SDL_GetTicks()-startFPS;
-      cout << "fps: " << round(FRAMES_PER_SECOND/(timeFPSframes/1000.0)) << endl;
+      std::cout << "fps: " << round(FRAMES_PER_SECOND/(timeFPSframes/1000.0)) << std::endl;
       startFPS = SDL_GetTicks();
 
       //		    cout << "Energy: " << environment->getEnergy() << endl;

@@ -1,9 +1,8 @@
 #include "globfunctions.hpp"
 
-using namespace std;
 
 SDL_Surface*
-gf::load_image( std::string filename , bool transparent)
+gf::load_image(std::string filename, bool transparent)
 {
   //The image that's loaded
   SDL_Surface* loadedImage = NULL;
@@ -29,7 +28,7 @@ gf::load_image( std::string filename , bool transparent)
   }
   else
   {
-    cout << filename << " not found." << endl;
+    std::cout << filename << " not found." << std::endl;
   }
 
   //Return the optimized image
@@ -58,7 +57,7 @@ gf::init(SDL_Surface *screen, std::string windowtitle)
   // Initialize all SDL subsystems
   if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
   {
-    cout << "failure initializing subsystems " << endl;
+    std::cout << "failure initializing subsystems " << std::endl;
   }
 
   // Set up the screen
@@ -75,7 +74,7 @@ gf::init(SDL_Surface *screen, std::string windowtitle)
   // If there was an error in setting up the screen
   if( screen == NULL )
   {
-    cout << "there was an error in setting up the screen " << endl;
+    std::cout << "there was an error in setting up the screen " << std::endl;
   }
 
   // Set the window caption

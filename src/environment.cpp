@@ -151,7 +151,6 @@ Environment::mergeBodies()
         vxNew = (para1[0]*x1[2]+para2[0]*x2[2]) / massNew;
         vyNew = (para1[0]*x1[3]+para2[0]*x2[3]) / massNew;
 
-        
         iter2 = m_bodies.erase(iter2);
         break;
       }

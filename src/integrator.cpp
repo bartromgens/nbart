@@ -1,6 +1,5 @@
 #include "integrator.hpp"
 
-using namespace std;
 
 Integrator::Integrator(Environment* environment, const std::array<double, 4> &x0, double stepsize)
   : m_environment(environment),
