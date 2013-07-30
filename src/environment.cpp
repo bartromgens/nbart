@@ -117,20 +117,6 @@ Environment::getStateDerivative(const std::array<double, 4>& x)
   stateDerivative[0] = x[2];
   stateDerivative[1] = x[3];
 
-  // Walls
-  //    if (x[0] < 0) {
-  //        x[2] = x[2]*-1;
-  //        x[0] += 8;
-  //    } else if (x[0] > hres) {
-  //        x[2] = x[2]*-1;
-  //        x[0] -= 8;
-  //    } else if (x[1] < 0) {
-  //        x[3] = x[3]*-1;
-  //        x[1] += 8;
-  //    } else if (x[1] > vres) {
-  //        x[3] = x[3]*-1;
-  //        x[1] -= 8;
-  //    }
   return stateDerivative;
 }
 
