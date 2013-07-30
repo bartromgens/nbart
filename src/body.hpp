@@ -2,6 +2,7 @@
 #define BODY_H_
 
 #include <iostream>
+#include <vector>
 
 #include "SDL/SDL.h"
 #include "trajectory.hpp"
@@ -16,6 +17,7 @@ class Environment;
    A RK4 object is composed of a EOMrk equations of motion object.
    A pointer to this EOMrk object is passed as parameter.
 */
+
 class Body {
 public:
   Body(Environment* environment, SDL_Surface *screen, std::string imageloc);
@@ -36,22 +38,20 @@ public:
   void setRadius(double radius);
 
   double getMass();
-  double* getState();
-  double* getParameters();
+  std::vector<double> getState();
+  std::vector<double> getParameters();
 protected:
 
 private:
   SDL_Surface* screen;
-  Integrator* integrator;
+  Integrator* m_integrator;
   Environment* environment;
   Trajectory* trajectory;
 
-  int dimx;
-  int dimpar;
   double stepsize;
-  double* x;
-  double* xNew;
-  double* para; // {mass, radius}
+  std::vector<double> x;
+  std::vector<double> xNew;
+  std::vector<double> para; // {mass, radius}
   int nStep;
   int linerate;
 

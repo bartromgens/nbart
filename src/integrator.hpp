@@ -16,29 +16,28 @@
 class Integrator
 {
 public:
-  Integrator(Environment* environment, double *x0, double *para, int dimx, int dimpar, double stepsize);
-  double* integrate(double tend);
-  void setIntSettings(double h, int dimx, int dimpar);
+  Integrator(Environment* m_environment, const std::vector<double>& x0, double stepsize);
+  std::vector<double> integrate(double m_tEnd);
   void setStepSize(double hin);
-  void setState(double *px0);
-  void setParameters(double *ppar);
+
   void updateState();
 
 private:
-  double x0[10], x1[10];
-  double para[10];
-  double *px0, *px1;
-  double k1[10],k2[10],k3[10],k4[10];
-  double x0k1[10], x0k2[10], x0k3[10];
-  double h, tend, mu;
-  double force1[10], force2[10], force3[10], force4[10];
-  double *pforce1, *pforce2, *pforce3, *pforce4;
-  int steps, dimx, dimpar;
-  double time;
-
-  Environment* environment;
-
   void oneStep();
+
+private:
+  Environment* m_environment;
+
+  double m_stepsize;
+  double m_tEnd;
+
+  std::vector<double> x0;
+  std::vector<double> x1;
+
+  std::vector<double> px0;
+  std::vector<double> px1;
+
+  int m_steps;
 };
 
 #endif /*INTEGRATOR_H_*/

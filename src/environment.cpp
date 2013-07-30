@@ -87,14 +87,14 @@ Environment::oneStep()
 }
 
 
-double*
-Environment::getStateDerivative(double* x, double* para)
+std::vector<double>
+Environment::getStateDerivative(const std::vector<double>& x)
 {
-  double* x2;
+  std::vector<double> x2(4, 0.0);
   double r;
   double mass;
   double x12[2];
-  double* stateDerivative = new double[4];
+  std::vector<double> stateDerivative(4, 0.0);
   stateDerivative[2] = 0.0;
   stateDerivative[3] = 0.0;
 
@@ -139,12 +139,11 @@ Environment::getStateDerivative(double* x, double* para)
 void
 Environment::mergeBodies()
 {
-  std::vector<Body* >::iterator bodyit2;
+  std::vector<double> x1;
+  std::vector<double> x2;
+  std::vector<double> para1;
+  std::vector<double> para2;
 
-  double* x1;
-  double* x2;
-  double* para1;
-  double* para2;
   double x12, y12, r12;
   bool localcol = false;
   double massNew, xNew, yNew, vxNew, vyNew;
@@ -209,7 +208,7 @@ Environment::mergeBodies()
 double
 Environment::getFieldStrength(double x, double y)
 {
-  double* x2;
+  std::vector<double> x2;
   double r;
   double mass;
   double x12[2];
@@ -245,10 +244,10 @@ Environment::getEnergy()
   double energy;
   double kineticEnergy = 0.0;
   double potentialEnergy = 0.0;
-  double* x1;
-  double* para1;
-  double* x2;
-  double* para2;
+  std::vector<double> x1;
+  std::vector<double> para1;
+  std::vector<double> x2;
+  std::vector<double> para2;
   double x12, y12, r12;
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
@@ -281,8 +280,8 @@ double
 Environment::getLinearMomentum()
 {
   double linearMomentum = 0;
-  double* x;
-  double* para;
+  std::vector<double> x;
+  std::vector<double> para;
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
   {

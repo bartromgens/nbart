@@ -7,18 +7,17 @@
 #include "body.hpp"
 
 Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
+  : x(4, 0.0),
+    xNew(4, 0.0),
+    para(4, 0.0)
 {
   drawbody = new DrawableBody(screen, imageloc);
   trajectory = new Trajectory(screen);
   this->environment = environment;
   nStep = 0;
-  dimx = 4;
-  dimpar = 2;
   stepsize = import::getStepSize();
   linerate = import::getLineRate();
-  x = new double[dimx];
-  xNew = new double[dimx];
-  para = new double[dimpar];
+
   x[0] = 200.0;
   x[1] = 200.0;
   x[2] = 0;
@@ -27,7 +26,7 @@ Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
   para[0] = .1e1; // mass [kg]
   para[1] = 15.0; // radius [m]
   drawbody->setSize(2*para[1]);
-  integrator = new Integrator(environment, x, para, dimx, dimpar, stepsize);
+  m_integrator = new Integrator(environment, x, stepsize);
   setScreenCenterPos((int)x[0],(int)x[1]);
 }
 
@@ -54,14 +53,14 @@ Body::drawTrajectory()
 void
 Body::oneStep()
 {
-  xNew = integrator->integrate(1);
+  xNew = m_integrator->integrate(1);
 }
 
 
 void
 Body::updateState()
 {
-  for (int i = 0; i < dimx; i++)
+  for (std::size_t i = 0; i < x.size(); i++)
   {
     x[i] = xNew[i];
   }
@@ -80,7 +79,7 @@ Body::setPosition(double xin, double yin)
 {
   this->x[0] = xin;
   this->x[1] = yin;
-  integrator = new Integrator(environment, x, para, dimx, dimpar, stepsize);
+  m_integrator = new Integrator(environment, x, stepsize);
   setScreenCenterPos((int)x[0],(int)x[1]);
 }
 
@@ -90,7 +89,7 @@ Body::setVelocity(double vxin, double vyin)
 {
   this->x[2] = vxin;
   this->x[3] = vyin;
-  integrator = new Integrator(environment, x, para, dimx, dimpar, stepsize);
+  m_integrator = new Integrator(environment, x, stepsize);
 }
 
 
@@ -99,6 +98,7 @@ Body::setScreenCenterPos(int x, int y)
 {
   drawbody->setCenterPos(x,y);
 }
+
 
 void
 Body::moveScreenCenterPos(int dx, int dy)
@@ -111,7 +111,7 @@ void
 Body::setMass(double mass)
 {
   this->para[0] = mass;
-  integrator = new Integrator(environment, x, para, dimx, dimpar, stepsize);
+  m_integrator = new Integrator(environment, x, stepsize);
 }
 
 
@@ -120,7 +120,7 @@ Body::setRadius(double radius)
 {
   this->para[1] = radius;
   drawbody->setSize(2*para[1]);
-  integrator = new Integrator(environment, x, para, dimx, dimpar, stepsize);
+  m_integrator = new Integrator(environment, x, stepsize);
 }
 
 
@@ -131,14 +131,14 @@ Body::getMass()
 }
 
 
-double*
+std::vector<double>
 Body::getState()
 {
   return x;
 }
 
 
-double*
+std::vector<double>
 Body::getParameters()
 {
   return para;

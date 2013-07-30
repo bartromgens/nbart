@@ -26,7 +26,7 @@ public:
   void drawBodies();
   void drawTrajectories();
 
-  double* getStateDerivative(double* x0, double* para);
+  std::vector<double> getStateDerivative(const std::vector<double> &x0);
 
   double getFieldStrength(double x, double y);
   double getEnergy();
