@@ -39,8 +39,8 @@ public:
   void setRadius(double radius);
 
   double getMass();
-  std::array<double, 4> getState();
-  std::array<double, 2> getParameters();
+  const std::array<double, 4>& getState();
+  const std::array<double, 2>& getParameters();
 protected:
 
 private:

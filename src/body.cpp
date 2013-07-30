@@ -131,14 +131,15 @@ Body::getMass()
 }
 
 
-std::array<double, 4>
+const std::array<double, 4>&
 Body::getState()
 {
   return x;
 }
 
 
-std::array<double, 2> Body::getParameters()
+const std::array<double, 2>&
+Body::getParameters()
 {
   return para;
 }

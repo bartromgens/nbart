@@ -19,7 +19,7 @@ class Integrator
 {
 public:
   Integrator(Environment* m_environment, const std::array<double, 4>& x0, double stepsize);
-  std::array<double, 4> integrate(double m_tEnd);
+  const std::array<double, 4>& integrate(double m_tEnd);
   void setStepSize(double hin);
 
   void updateState();

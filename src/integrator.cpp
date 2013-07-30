@@ -13,7 +13,7 @@ Integrator::Integrator(Environment* environment, const std::array<double, 4> &x0
 }
 
 
-std::array<double, 4>
+const std::array<double, 4>&
 Integrator::integrate(double tend)
 {
   m_steps = tend/m_stepsize;
@@ -23,6 +23,7 @@ Integrator::integrate(double tend)
     oneStep();
     updateState();
   }
+
   return x0;
 }
 
