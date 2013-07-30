@@ -6,19 +6,20 @@
 
 
 
-class Trajectory {
-private:
-	SDL_Surface *screen;
-	int entries;
-	double x[100000];
-	double y[100000];
-
+class Trajectory
+{
 public:
-	Trajectory(SDL_Surface* screen);
-    double lineColorRate;
+  Trajectory(SDL_Surface* screen);
+  double lineColorRate;
 
-	void addPoint(double x, double y);
-	void draw();
+  void addPoint(double x, double y);
+  void draw();
+
+private:
+  SDL_Surface *screen;
+  int entries;
+  double x[100000];
+  double y[100000];
 };
 
 #endif /* TRAJECTORY_H_ */

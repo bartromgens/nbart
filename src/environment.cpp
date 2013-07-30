@@ -4,7 +4,9 @@
 
 #include "environment.hpp"
 
-Environment::Environment(SDL_Surface* screen) {
+
+Environment::Environment(SDL_Surface* screen)
+{
   this->screen = screen;
   stateDerivative = new double[4];
   hres = import::getHres();
@@ -12,54 +14,83 @@ Environment::Environment(SDL_Surface* screen) {
   nBodies = import::getNBodies();
 }
 
+
 Environment::~Environment() {
 }
 
-void Environment::addBody(Body* body) {
+
+void
+Environment::addBody(Body* body)
+{
   bodyvec.push_back(body);
 }
 
-void Environment::addMasslessBody(Body* body) {
+
+void
+Environment::addMasslessBody(Body* body)
+{
   masslessbodyvec.push_back(body);
 }
 
-void Environment::clearAllBodies() {
+
+void
+Environment::clearAllBodies()
+{
   bodyvec.clear();
   masslessbodyvec.clear();
 }
 
-void Environment::drawBodies() {
-  for (std::size_t i = 0; i < bodyvec.size(); i++) {
+
+void
+Environment::drawBodies()
+{
+  for (std::size_t i = 0; i < bodyvec.size(); i++)
+  {
     bodyvec[i]->draw();
   }
-  for (std::size_t i = 0; i < masslessbodyvec.size(); i++) {
+  for (std::size_t i = 0; i < masslessbodyvec.size(); i++)
+  {
     masslessbodyvec[i]->draw();
   }
 }
 
-void Environment::drawTrajectories() {
-  for (std::size_t i = 0; i < bodyvec.size(); i++) {
+
+void
+Environment::drawTrajectories()
+{
+  for (std::size_t i = 0; i < bodyvec.size(); i++)
+  {
     bodyvec[i]->drawTrajectory();
   }
 }
 
-void Environment::oneStep() {
-  for (std::size_t i = 0; i < bodyvec.size(); i++) {
+
+void
+Environment::oneStep()
+{
+  for (std::size_t i = 0; i < bodyvec.size(); i++)
+  {
     bodyvec[i]->oneStep();
   }
-  for (std::size_t i = 0; i < bodyvec.size(); i++) {
+  for (std::size_t i = 0; i < bodyvec.size(); i++)
+  {
     bodyvec[i]->updateState();
   }
-  for (std::size_t i = 0; i < masslessbodyvec.size(); i++) {
+  for (std::size_t i = 0; i < masslessbodyvec.size(); i++)
+  {
     masslessbodyvec[i]->oneStep();
   }
-  for (std::size_t i = 0; i < masslessbodyvec.size(); i++) {
+  for (std::size_t i = 0; i < masslessbodyvec.size(); i++)
+  {
     masslessbodyvec[i]->updateState();
   }
 
 }
 
-double* Environment::getStateDerivative(double* x, double* para) {
+
+double*
+Environment::getStateDerivative(double* x, double* para)
+{
   double* x2;
   double r;
   double mass;
@@ -67,9 +98,11 @@ double* Environment::getStateDerivative(double* x, double* para) {
   stateDerivative[2] = 0.0;
   stateDerivative[3] = 0.0;
 
-  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++) {
+  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++)
+  {
     x2 = (*bodyit)->getState();
-    if (x2[0] != x[0] && x2[1] != x[1]) {
+    if (x2[0] != x[0] && x2[1] != x[1])
+    {
       mass = (*bodyit)->getMass();
       x12[0] = x[0]-x2[0];
       x12[1] = x[1]-x2[1];
@@ -101,7 +134,10 @@ double* Environment::getStateDerivative(double* x, double* para) {
   return stateDerivative;
 }
 
-void Environment::mergeBodies() {
+
+void
+Environment::mergeBodies()
+{
   std::vector<Body* >::iterator bodyit2;
 
   double* x1;
@@ -112,18 +148,21 @@ void Environment::mergeBodies() {
   bool localcol = false;
   double massNew, xNew, yNew, vxNew, vyNew;
 
-  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end();) {
+  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end();)
+  {
     x1 = (*bodyit)->getState();
     para1 = (*bodyit)->getParameters();
 
-    for (bodyit2 = bodyvec.begin(); bodyit2 != bodyvec.end();) {
+    for (bodyit2 = bodyvec.begin(); bodyit2 != bodyvec.end();)
+    {
       x2 = (*bodyit2)->getState();
       para2 = (*bodyit2)->getParameters();
       x12 = x2[0]-x1[0];
       y12 = x2[1]-x1[1];
       r12 = sqrt(x12*x12+y12*y12);
 
-      if ( (bodyit2 != bodyit) && (r12 < (para1[1]+para2[1])) )  {
+      if ( (bodyit2 != bodyit) && (r12 < (para1[1]+para2[1])) )
+      {
         localcol = true;
         std::cout << "Collision" << std::endl;
         massNew = (para1[0]+para2[0]);
@@ -135,20 +174,26 @@ void Environment::mergeBodies() {
         
         bodyit2 = bodyvec.erase(bodyit2);
         break;
-      } else {
+      }
+      else
+      {
         bodyit2++;
       }
     }
 
-    if (localcol) {
+    if (localcol)
+    {
       bodyit = bodyvec.erase(bodyit);
       break;
-    } else {
+    }
+    else
+    {
       bodyit++;
     }
   }
 
-  if (localcol) {
+  if (localcol)
+  {
     Body* body = new Body(this, screen, "./data/blurball.png");
     body->setMass(massNew);
     body->setRadius(sqrt(massNew*20));
@@ -159,7 +204,10 @@ void Environment::mergeBodies() {
   }
 }
 
-double Environment::getFieldStrength(double x, double y) {
+
+double
+Environment::getFieldStrength(double x, double y)
+{
   double* x2;
   double r;
   double mass;
@@ -168,14 +216,17 @@ double Environment::getFieldStrength(double x, double y) {
   double gravityForceX = 0.0;
   double gravityForceY = 0.0;
 
-  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++) {
+  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++)
+  {
     x2 = (*bodyit)->getState();
-    if (x2[0] != x && x2[1] != y) {
+    if (x2[0] != x && x2[1] != y)
+    {
       mass = (*bodyit)->getMass();
       x12[0] = x-x2[0];
       x12[1] = y-x2[1];
       r = sqrt(x12[0]*x12[0]+x12[1]*x12[1]);
-      if (r > 1) {
+      if (r > 1)
+      {
         gravityForceX += mass/(r*r*r)*x12[0];
         gravityForceY += mass/(r*r*r)*x12[1];
       }
@@ -186,7 +237,10 @@ double Environment::getFieldStrength(double x, double y) {
   return gravityForce;
 }
 
-double Environment::getEnergy() {
+
+double
+Environment::getEnergy()
+{
   double energy;
   double kineticEnergy = 0.0;
   double potentialEnergy = 0.0;
@@ -198,12 +252,15 @@ double Environment::getEnergy() {
 
   std::vector<Body* >::iterator bodyit2;
 
-  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++) {
+  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++)
+  {
     x1 = (*bodyit)->getState();
     para1 = (*bodyit)->getParameters();
 
-    for (bodyit2 = bodyvec.begin(); bodyit2 != bodyvec.end(); bodyit2++) {
-      if (bodyit2 != bodyit) {
+    for (bodyit2 = bodyvec.begin(); bodyit2 != bodyvec.end(); bodyit2++)
+    {
+      if (bodyit2 != bodyit)
+      {
         x2 = (*bodyit2)->getState();
         para2 = (*bodyit2)->getParameters();
         x12 = x2[0]-x1[0];
@@ -220,12 +277,16 @@ double Environment::getEnergy() {
   return energy;
 }
 
-double Environment::getLinearMomentum() {
+
+double
+Environment::getLinearMomentum()
+{
   double linearMomentum = 0;
   double* x;
   double* para;
 
-  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++) {
+  for (bodyit = bodyvec.begin(); bodyit != bodyvec.end(); bodyit++)
+  {
     x = (*bodyit)->getState();
     para = (*bodyit)->getParameters();
     linearMomentum += para[0]*x[2];

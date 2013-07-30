@@ -13,28 +13,21 @@
 #include <iostream>
 #include <vector>
 
-struct Color {
+struct Color
+{
 	int r;
 	int g;
 	int b;
 };
 
-struct Coordinate {
+struct Coordinate
+{
 	int x;
 	int y;
 };
 
-class Node {
-private:
-	int x;
-	int y;
-	bool wall, path;
-	bool opened, closed;
-	bool start, target;
-	double f,g,h;
-	Color color;
-	Coordinate parent;
-
+class Node
+{
 public:
 	Node(int x, int y);
 	int getX();
@@ -56,6 +49,16 @@ public:
 	void resetFGH();
 	double getG();
 	double getF();
+
+private:
+  int x;
+  int y;
+  bool wall, path;
+  bool opened, closed;
+  bool start, target;
+  double f,g,h;
+  Color color;
+  Coordinate parent;
 };
 
 #endif /* NODE_HPP_ */
