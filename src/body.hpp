@@ -42,7 +42,9 @@ public:
   double getMass();
   const std::array<double, 4>& getState();
   const std::array<double, 2>& getParameters();
-protected:
+
+private:
+  double random(double start, double end);
 
 private:
   std::unique_ptr<Integrator> m_integrator;
@@ -50,14 +52,14 @@ private:
   std::unique_ptr<Trajectory> m_trajectory;
   std::unique_ptr<DrawableBody> m_drawable;
 
-  double stepsize;
   std::array<double, 4> m_x;
   std::array<double, 4> m_xNew;
   std::array<double, 2> m_para; // {mass, radius}
-  int nStep;
-  int linerate;
 
-  double random(double start, double end);
+  int m_nSteps;
+  double m_stepsize;
+  int m_linerate;
+
 };
 
 #endif /* BODY_H_ */
