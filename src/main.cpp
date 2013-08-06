@@ -3,6 +3,7 @@
 #include "drawableBody.hpp"
 #include "environment.hpp"
 #include "globfunctions.hpp"
+#include "gravityfield.hpp"
 #include "importsettings.hpp"
 #include "initialpattern.hpp"
 #include "node.hpp"
@@ -12,7 +13,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-
 
 int main(int argc, char *argv[])
 {
@@ -65,44 +65,11 @@ int main(int argc, char *argv[])
   std::cout << "Background loaded..." << std::endl;
 
   const int TILE_SIZE = 20;
-  const int BORDER_SIZE = 2;
+  const int TILE_BORDER_SIZE = 2;
   const int H_TILES = SCREEN_WIDTH/TILE_SIZE;
   const int V_TILES = SCREEN_HEIGHT/TILE_SIZE;
 
-  // initialze field
-  std::vector<std::vector<Node*> > field(V_TILES, std::vector<Node*>(H_TILES));
-  for (int i = 0; i < V_TILES; i++)
-  {
-    for (int j = 0; j < H_TILES; j++)
-    {
-      field[i][j] = new Node(j,i);
-    }
-  }
-
-  SDL_Rect outtiles[V_TILES][H_TILES];
-  for (int i = 0; i < V_TILES; i++)
-  {
-    for (int j = 0; j < H_TILES; j++)
-    {
-      outtiles[i][j].x = TILE_SIZE*j;
-      outtiles[i][j].y = TILE_SIZE*i;
-      outtiles[i][j].w = TILE_SIZE;
-      outtiles[i][j].h = TILE_SIZE;
-    }
-  }
-
-  SDL_Rect insidetiles[V_TILES][H_TILES];
-  for (int i = 0; i < V_TILES; i++)
-  {
-    for (int j = 0; j < H_TILES; j++)
-    {
-      insidetiles[i][j].x = (TILE_SIZE*j)-BORDER_SIZE;
-      insidetiles[i][j].y = (TILE_SIZE*i)-BORDER_SIZE;
-      insidetiles[i][j].w = TILE_SIZE-(2*BORDER_SIZE);
-      insidetiles[i][j].h = TILE_SIZE-(2*BORDER_SIZE);
-    }
-  }
-
+  GravityField gravityField(V_TILES, H_TILES, TILE_SIZE, TILE_BORDER_SIZE);
 
   int startFPS = SDL_GetTicks();
 
@@ -122,7 +89,6 @@ int main(int argc, char *argv[])
     while( SDL_PollEvent( &event ) )
     {
       //If the user has Xed out the window
-
       if( event.type == SDL_QUIT )
       {
         //Quit the program
@@ -266,24 +232,8 @@ int main(int argc, char *argv[])
     // Draw Field
     if (showField)
     {
-      for (int i = 0; i < V_TILES; i++)
-      {
-        for (int j = 0; j < H_TILES; j++)
-        {
-          //          Color tempcol = field[i][j]->getColor();
-          SDL_FillRect( screen, &outtiles[i][j], SDL_MapRGB( screen->format, 0, 0, 0) );
-          double fieldStrength = environment->getFieldStrength(j*TILE_SIZE+TILE_SIZE/2.0,i*TILE_SIZE+TILE_SIZE/2.0) * 3.0e7;
-
-          fieldStrength = pow(fieldStrength, 1.0/3.0);
-
-          if (fieldStrength > 255)
-          {
-            fieldStrength = 255;
-          }
-          //cout << fieldStrength << endl;
-          SDL_FillRect( screen, &insidetiles[i][j], SDL_MapRGB( screen->format, fieldStrength, 0, 0) );
-        }
-      }
+      gravityField.draw(screen, environment);
+//      drawGravityField(outtiles, insidetiles, screen, V_TILES, H_TILES, environment, m_tileSize);
     }
 
     // Draw Trajectory
@@ -311,7 +261,6 @@ int main(int argc, char *argv[])
       int timeFPSframes = SDL_GetTicks()-startFPS;
       std::cout << "fps: " << round(FRAMES_PER_SECOND/(timeFPSframes/1000.0)) << std::endl;
       startFPS = SDL_GetTicks();
-
       //		    cout << "Energy: " << environment->getEnergy() << endl;
       //		    cout << "Linear Momentum: " << environment->getLinearMomentum() << endl;
     }
