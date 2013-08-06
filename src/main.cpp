@@ -1,151 +1,17 @@
-#include <cstdlib>
-#include <cmath>
-#include <iostream>
-#include <vector>
-#include <ctime>
-
-#include "globfunctions.hpp"
-#include "importsettings.hpp"
+#include "body.hpp"
 #include "drawable.hpp"
 #include "drawableBody.hpp"
-#include "body.hpp"
 #include "environment.hpp"
+#include "globfunctions.hpp"
+#include "importsettings.hpp"
+#include "initialpattern.hpp"
 #include "node.hpp"
 
-
-int factorial(int i)
-{
-  if (i <= 1)
-    return i;
-  return (i * factorial(i - 1));
-}
-
-
-double random(double start, double end)
-{
-  double randomDouble = start+(end-start)*rand()/(RAND_MAX + 1.0);
-  return randomDouble;
-}
-
-// Orbiting Pattern
-std::vector<Body* >
-createPattern1(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies, double mass)
-{
-  const int SCREEN_WIDTH = import::getHres();
-  const int SCREEN_HEIGHT = import::getVres();
-
-  for (int i = 0; i < nBodies; i++)
-  {
-    Body* body = new Body(environment, screen, "./data/blurball.png");
-    environment->addBody(body);
-    bodyvec.push_back(body);
-    bodyvec.back()->setMass( mass );
-    bodyvec.back()->setRadius(sqrt(mass*20));
-    int r = 300;
-    double theta = i*360.0/nBodies/180.0*M_PI;
-    bodyvec.back()->setPosition(SCREEN_WIDTH/2.0+r*cos(theta), SCREEN_HEIGHT/2.0+r*sin(theta));
-    bodyvec.back()->setVelocity(-0.1*sin(theta),0.1*cos(theta));
-    //bodyvec.back()->setVelocity(0.3*sin(theta),0.3*cos(theta));
-    //        bodyvec.back()->setVelocity(0,0);
-  }
-  return bodyvec;
-}
-
-// Random pattern
-std::vector<Body* >
-createPattern2(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
-{
-  const int SCREEN_WIDTH = import::getHres();
-  const int SCREEN_HEIGHT = import::getVres();
-
-  for (int i = 0; i < nBodies; i++)
-  {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
-    environment->addBody(body);
-    bodyvec.push_back(body);
-    double mass = random(0.01, 0.1);
-    bodyvec.back()->setMass( mass );
-    bodyvec.back()->setRadius(2);
-    bodyvec.back()->setPosition(random(0, SCREEN_WIDTH), random(0, SCREEN_HEIGHT));
-    bodyvec.back()->setVelocity(random(-0.01,0.01), random(-0.01,0.01));
-  }
-  return bodyvec;
-}
-
-// Spiral Pattern
-std::vector<Body* >
-createPattern3(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
-{
-  const int SCREEN_WIDTH = import::getHres();
-  const int SCREEN_HEIGHT = import::getVres();
-
-  for (int i = 0; i < nBodies; i++)
-  {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
-    environment->addBody(body);
-    bodyvec.push_back(body);
-    double mass = random(50/nBodies, 50/nBodies);
-    bodyvec.back()->setMass( mass );
-    bodyvec.back()->setRadius(sqrt(mass*10));
-    //bodyvec.back()->setPosition(random(0, SCREEN_WIDTH), random(0, SCREEN_HEIGHT));
-    //bodyvec.back()->setVelocity(random(-0.2,0.2), random(-0.2,0.2));
-    int r = SCREEN_WIDTH/nBodies/3.0*(i+1);
-    double theta = i*360.0/nBodies/180.0*M_PI;
-    bodyvec.back()->setPosition(SCREEN_WIDTH/2.0+r*cos(theta), SCREEN_HEIGHT/2.0+r*sin(theta));
-    bodyvec.back()->setVelocity(-sqrt(mass/r)*sin(theta),sqrt(mass/r)*cos(theta));
-    //        bodyvec.back()->setVelocity(0.3*sin(theta),0.3*cos(theta));
-    //        bodyvec.back()->setVelocity(0,0);
-  }
-  return bodyvec;
-}
-
-// Strange numero uno
-std::vector<Body* >
-createPattern4(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
-{
-  const int SCREEN_WIDTH = import::getHres();
-  const int SCREEN_HEIGHT = import::getVres();
-
-  for (int i = 0; i < nBodies; i++) {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
-    environment->addBody(body);
-    bodyvec.push_back(body);
-    double mass = random(3, 3);
-    bodyvec.back()->setMass( mass );
-    bodyvec.back()->setRadius(sqrt(mass*10));
-    double theta = i*360.0/nBodies/180.0*M_PI;
-    int r = 300;
-    bodyvec.back()->setPosition(SCREEN_WIDTH/2.0+r*cos(theta), SCREEN_HEIGHT/2.0+r*sin(theta));
-    bodyvec.back()->setVelocity(0.2*sin(theta),0.2*cos(theta));
-    //        bodyvec.back()->setVelocity(0.3*sin(theta),0.3*cos(theta));
-  }
-  return bodyvec;
-}
-
-// Strange numero uno
-std::vector<Body* >
-createPattern5(std::vector<Body* > bodyvec, Environment* environment, SDL_Surface* screen, int nBodies)
-{
-  const int SCREEN_WIDTH = import::getHres();
-  const int SCREEN_HEIGHT = import::getVres();
-
-  for (int i = 0; i < nBodies; i++)
-  {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
-    environment->addBody(body);
-    bodyvec.push_back(body);
-
-    double mass = random(1, 10);
-    bodyvec.back()->setMass( mass );
-    bodyvec.back()->setRadius(sqrt(mass*10));
-    double theta = i*360.0/nBodies/180.0*M_PI;
-    int r = 300;
-    bodyvec.back()->setPosition(i*SCREEN_WIDTH/nBodies, SCREEN_HEIGHT/2.0+r*sin(theta));
-    bodyvec.back()->setVelocity(0.2*sin(theta),0.2*cos(theta));
-    //        bodyvec.back()->setVelocity(0.3*sin(theta),0.3*cos(theta));
-  }
-  return bodyvec;
-}
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
 
 
 int main(int argc, char *argv[])
@@ -301,31 +167,31 @@ int main(int argc, char *argv[])
           mergeBodies = !mergeBodies;
           break;
         case SDLK_1:
-          bodyvec = createPattern1(bodyvec, environment, screen, 2, 10);
+          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 2, 10);
           break;
         case SDLK_2:
-          bodyvec = createPattern1(bodyvec, environment, screen, 3, 5);
+          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 3, 5);
           break;
         case SDLK_3:
-          bodyvec = createPattern1(bodyvec, environment, screen, 4, 3);
+          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 4, 3);
           break;
         case SDLK_4:
-          bodyvec = createPattern1(bodyvec, environment, screen, 6, 3);
+          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 6, 3);
           break;
         case SDLK_5:
-          bodyvec = createPattern1(bodyvec, environment, screen, 8, 2);
+          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 8, 2);
           break;
         case SDLK_6:
-          bodyvec = createPattern2(bodyvec, environment, screen, 14);
+          bodyvec = initialpattern::createPattern2(bodyvec, environment, screen, 14);
           break;
         case SDLK_7:
-          bodyvec = createPattern3(bodyvec, environment, screen, 10);
+          bodyvec = initialpattern::createPattern3(bodyvec, environment, screen, 10);
           break;
         case SDLK_8:
-          bodyvec = createPattern4(bodyvec, environment, screen, 10);
+          bodyvec = initialpattern::createPattern4(bodyvec, environment, screen, 10);
           break;
         case SDLK_9:
-          bodyvec = createPattern5(bodyvec, environment, screen, 10);
+          bodyvec = initialpattern::createPattern5(bodyvec, environment, screen, 10);
           break;
         default:
           break;
@@ -391,7 +257,7 @@ int main(int argc, char *argv[])
 
     if (!pause)
     {
-      for (int i = 0 ; i < simSpeed*5 ; i++)
+      for (int i = 0 ; i < simSpeed*1 ; i++)
       {
         environment->oneStep();
       }
@@ -433,7 +299,7 @@ int main(int argc, char *argv[])
     }
 
     // Check for Collisions
-    if (mergeBodies )
+    if (mergeBodies)
     {
       environment->mergeBodies();
     }

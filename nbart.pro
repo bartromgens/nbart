@@ -29,6 +29,7 @@ SOURCES += \
     src/drawableBody.cpp \
     src/drawable.cpp \
     src/body.cpp \
+    src/initialpattern.cpp
 
 HEADERS += \
     src/drawable.hpp \
@@ -43,6 +44,7 @@ HEADERS += \
     src/environment.hpp \
     src/drawableBody.hpp \
     src/body.hpp \
+    src/initialpattern.hpp
 
 OTHER_FILES += \
     data/whiteball.png \
