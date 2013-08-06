@@ -42,8 +42,7 @@ int main(int argc, char *argv[])
   Environment* environment = new Environment(screen);
   std::cout << "Environment created... " << std::endl;
 
-  std::vector<Body* > bodyvec;
-  std::vector<Body* >::iterator drawit;
+  std::vector<Body*> bodies;
 
   std::cout << "Body vectors initialized... " << std::endl;
 
@@ -124,7 +123,7 @@ int main(int argc, char *argv[])
           break;
         case SDLK_c:
           environment->clearAllBodies();
-          bodyvec.clear();
+          bodies.clear();
           break;
         case SDLK_f:
           showField = !showField;
@@ -133,31 +132,31 @@ int main(int argc, char *argv[])
           mergeBodies = !mergeBodies;
           break;
         case SDLK_1:
-          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 2, 10);
+          bodies = initialpattern::createPattern1(bodies, environment, screen, 2, 10);
           break;
         case SDLK_2:
-          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 3, 5);
+          bodies = initialpattern::createPattern1(bodies, environment, screen, 3, 5);
           break;
         case SDLK_3:
-          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 4, 3);
+          bodies = initialpattern::createPattern1(bodies, environment, screen, 4, 3);
           break;
         case SDLK_4:
-          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 6, 3);
+          bodies = initialpattern::createPattern1(bodies, environment, screen, 6, 3);
           break;
         case SDLK_5:
-          bodyvec = initialpattern::createPattern1(bodyvec, environment, screen, 8, 2);
+          bodies = initialpattern::createPattern1(bodies, environment, screen, 8, 2);
           break;
         case SDLK_6:
-          bodyvec = initialpattern::createPattern2(bodyvec, environment, screen, 14);
+          bodies = initialpattern::createPattern2(bodies, environment, screen, 14);
           break;
         case SDLK_7:
-          bodyvec = initialpattern::createPattern3(bodyvec, environment, screen, 10);
+          bodies = initialpattern::createPattern3(bodies, environment, screen, 10);
           break;
         case SDLK_8:
-          bodyvec = initialpattern::createPattern4(bodyvec, environment, screen, 10);
+          bodies = initialpattern::createPattern4(bodies, environment, screen, 10);
           break;
         case SDLK_9:
-          bodyvec = initialpattern::createPattern5(bodyvec, environment, screen, 10);
+          bodies = initialpattern::createPattern5(bodies, environment, screen, 10);
           break;
         default:
           break;
@@ -198,11 +197,11 @@ int main(int argc, char *argv[])
           std::cout << "Left Mouse Up..." << std::endl;
           Body* body = new Body(environment, screen, "./data/blurball.png");
           environment->addBody(body);
-          bodyvec.push_back(body);
-          bodyvec.back()->setMass(newMass);
-          bodyvec.back()->setPosition(mousedownX, mousedownY);
-          bodyvec.back()->setRadius(sqrt(newMass*20));
-          bodyvec.back()->setVelocity((mouseupX-mousedownX)/500.0,(mouseupY-mousedownY)/500.0);
+          bodies.push_back(body);
+          bodies.back()->setMass(newMass);
+          bodies.back()->setPosition(mousedownX, mousedownY);
+          bodies.back()->setRadius(sqrt(newMass*20));
+          bodies.back()->setVelocity((mouseupX-mousedownX)/500.0,(mouseupY-mousedownY)/500.0);
         }
         else if ( event.button.button == SDL_BUTTON_RIGHT)
         {
@@ -233,7 +232,6 @@ int main(int argc, char *argv[])
     if (showField)
     {
       gravityField.draw(screen, environment);
-//      drawGravityField(outtiles, insidetiles, screen, V_TILES, H_TILES, environment, m_tileSize);
     }
 
     // Draw Trajectory
@@ -256,13 +254,11 @@ int main(int argc, char *argv[])
 
     //Sleep the remaining frame time
     double timeleft = ( 1000.0 / FRAMES_PER_SECOND ) - (SDL_GetTicks()-startFrameTime);
-    if (frame%FRAMES_PER_SECOND == 0)
+    if ( frame%FRAMES_PER_SECOND == 0)
     {
       int timeFPSframes = SDL_GetTicks()-startFPS;
       std::cout << "fps: " << round(FRAMES_PER_SECOND/(timeFPSframes/1000.0)) << std::endl;
       startFPS = SDL_GetTicks();
-      //		    cout << "Energy: " << environment->getEnergy() << endl;
-      //		    cout << "Linear Momentum: " << environment->getLinearMomentum() << endl;
     }
 
     if (timeleft > 0)
