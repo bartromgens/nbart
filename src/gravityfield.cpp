@@ -48,6 +48,7 @@ GravityField::draw(SDL_Surface* screen, Environment* environment)
     for (int j = 0; j < m_nHorizontalTiles; j++)
     {
       SDL_FillRect( screen, &m_outtiles[i][j], SDL_MapRGB( screen->format, 0, 0, 0) );
+
       double fieldStrength = environment->getFieldStrength(j*m_tileSize+m_tileSize/2.0,i*m_tileSize+m_tileSize/2.0) * 3.0e7;
 
       fieldStrength = pow(fieldStrength, 1.0/3.0);

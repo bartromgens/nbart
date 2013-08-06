@@ -2,6 +2,7 @@
 #define BODY_H_
 
 #include <array>
+#include <memory>
 #include <iostream>
 #include <vector>
 
@@ -21,7 +22,7 @@ class Environment;
 
 class Body {
 public:
-  Body(Environment* environment, SDL_Surface *screen, std::string imageloc);
+  Body(Environment* m_environment, SDL_Surface *screen, std::string imageloc);
   ~Body();
 
   void draw();
@@ -30,9 +31,9 @@ public:
   void oneStep();
   void updateState();
 
-  void setPosition(double x, double y);
+  void setPosition(double m_x, double y);
   void setVelocity(double vxin, double vyin);
-  void setScreenCenterPos(int x, int y);
+  void setScreenCenterPos(int m_x, int y);
   void moveScreenCenterPos(int dx, int dy);
 
   void setMass(double mass);
@@ -44,19 +45,17 @@ public:
 protected:
 
 private:
-  SDL_Surface* screen;
-  Integrator* m_integrator;
-  Environment* environment;
-  Trajectory* trajectory;
+  std::unique_ptr<Integrator> m_integrator;
+  Environment* m_environment;
+  std::unique_ptr<Trajectory> m_trajectory;
+  std::unique_ptr<DrawableBody> m_drawable;
 
   double stepsize;
-  std::array<double, 4> x;
-  std::array<double, 4> xNew;
-  std::array<double, 2> para; // {mass, radius}
+  std::array<double, 4> m_x;
+  std::array<double, 4> m_xNew;
+  std::array<double, 2> m_para; // {mass, radius}
   int nStep;
   int linerate;
-
-  DrawableBody *drawbody;
 
   double random(double start, double end);
 };
