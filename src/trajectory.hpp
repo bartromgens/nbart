@@ -4,8 +4,6 @@
 #include <iostream>
 #include "SDL/SDL.h"
 
-
-
 class Trajectory
 {
 public:

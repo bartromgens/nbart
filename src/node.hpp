@@ -1,10 +1,3 @@
-/*
- * node.hpp
- *
- *  Created on: Apr 23, 2010
- *      Author: annom
- */
-
 #ifndef NODE_HPP_
 #define NODE_HPP_
 

@@ -7,12 +7,7 @@
 #include "SDL/SDL.h"
 #include "SDL_rotozoom.h"
 
-//!  RK4 (Runge Kutta 4th order) fixed stepsize integrator class
-/*!
-   The most basic and conventional higher order RK4 ODE integrator.
-   A RK4 object is composed of a EOMrk equations of motion object.
-   A pointer to this EOMrk object is passed as parameter.
-*/
+
 class Drawable
 {
 public:

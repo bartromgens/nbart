@@ -1,10 +1,3 @@
-/*
- * importsettings.hpp
- *
- *  Created on: Apr 24, 2010
- *      Author: annom
- */
-
 #ifndef IMPORTSETTINGS_HPP_
 #define IMPORTSETTINGS_HPP_
 
