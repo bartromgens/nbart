@@ -87,6 +87,8 @@ Environment::oneStep()
 void
 Environment::oneStepImpl()
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
+
   for (std::size_t i = 0; i < m_bodies.size(); i++)
   {
     m_bodies[i]->oneStep();
@@ -103,8 +105,6 @@ Environment::oneStepImpl()
 void
 Environment::updateState()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-
   for (std::size_t i = 0; i < m_bodies.size(); i++)
   {
     m_bodies[i]->updateState();

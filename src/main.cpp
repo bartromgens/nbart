@@ -42,23 +42,6 @@ int main(int argc, char *argv[])
   Environment* environment = new Environment(screen);
   std::cout << "Environment created... " << std::endl;
 
-  std::vector<Body*> bodies;
-
-  std::cout << "Body vectors initialized... " << std::endl;
-
-  //  const int nBodies = N_BODIES;
-  //bodyvec = createPattern4(bodyvec, environment, screen, nBodies);
-  //bodyvec = createPattern2(bodyvec, environment, screen, nBodies);
-  //bodyvec = createPattern3(bodyvec, environment, screen, nBodies);
-  //Body* body = new Body(environment, screen, "./data/whiteball.png");
-  //environment->addBody(body);
-  //bodyvec.push_back(body);
-  //bodyvec.back()->setMass(50);
-  //bodyvec.back()->setPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-  //bodyvec.back()->setVelocity(0,0);
-  //bodyvec.back()->setRadius(25);
-  std::cout << "Bodies created... " << std::endl;
-
   SDL_Surface *background = NULL;
   background = gf::load_image( "./data/black.png" , false);
   std::cout << "Background loaded..." << std::endl;
@@ -123,7 +106,6 @@ int main(int argc, char *argv[])
           break;
         case SDLK_c:
           environment->clearAllBodies();
-          bodies.clear();
           break;
         case SDLK_f:
           showField = !showField;
@@ -132,31 +114,31 @@ int main(int argc, char *argv[])
           mergeBodies = !mergeBodies;
           break;
         case SDLK_1:
-          bodies = initialpattern::createPattern1(bodies, environment, screen, 2, 10);
+          initialpattern::createPattern1(environment, screen, 2, 10);
           break;
         case SDLK_2:
-          bodies = initialpattern::createPattern1(bodies, environment, screen, 3, 5);
+          initialpattern::createPattern1(environment, screen, 3, 5);
           break;
         case SDLK_3:
-          bodies = initialpattern::createPattern1(bodies, environment, screen, 4, 3);
+          initialpattern::createPattern1(environment, screen, 4, 3);
           break;
         case SDLK_4:
-          bodies = initialpattern::createPattern1(bodies, environment, screen, 6, 3);
+          initialpattern::createPattern1(environment, screen, 6, 3);
           break;
         case SDLK_5:
-          bodies = initialpattern::createPattern1(bodies, environment, screen, 8, 2);
+          initialpattern::createPattern1(environment, screen, 8, 2);
           break;
         case SDLK_6:
-          bodies = initialpattern::createPattern2(bodies, environment, screen, 14);
+          initialpattern::createPattern2(environment, screen, 14);
           break;
         case SDLK_7:
-          bodies = initialpattern::createPattern3(bodies, environment, screen, 10);
+          initialpattern::createPattern3(environment, screen, 10);
           break;
         case SDLK_8:
-          bodies = initialpattern::createPattern4(bodies, environment, screen, 10);
+          initialpattern::createPattern4(environment, screen, 10);
           break;
         case SDLK_9:
-          bodies = initialpattern::createPattern5(bodies, environment, screen, 10);
+          initialpattern::createPattern5(environment, screen, 10);
           break;
         default:
           break;
@@ -197,11 +179,10 @@ int main(int argc, char *argv[])
           std::cout << "Left Mouse Up..." << std::endl;
           Body* body = new Body(environment, screen, "./data/blurball.png");
           environment->addBody(body);
-          bodies.push_back(body);
-          bodies.back()->setMass(newMass);
-          bodies.back()->setPosition(mousedownX, mousedownY);
-          bodies.back()->setRadius(sqrt(newMass*20));
-          bodies.back()->setVelocity((mouseupX-mousedownX)/500.0,(mouseupY-mousedownY)/500.0);
+          body->setMass(newMass);
+          body->setPosition(mousedownX, mousedownY);
+          body->setRadius(sqrt(newMass*20));
+          body->setVelocity((mouseupX-mousedownX)/500.0,(mouseupY-mousedownY)/500.0);
         }
         else if ( event.button.button == SDL_BUTTON_RIGHT)
         {

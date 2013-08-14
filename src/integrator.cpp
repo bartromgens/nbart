@@ -1,7 +1,7 @@
 #include "integrator.hpp"
 
 
-Integrator::Integrator(Environment* environment, const std::array<double, 4> &x0, double stepsize)
+Integrator::Integrator(Environment* environment, const std::array<double, 4>& x0, double stepsize)
   : m_environment(environment),
     m_stepsize(stepsize),
     x0(x0),

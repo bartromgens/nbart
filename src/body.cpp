@@ -7,13 +7,14 @@
 #include "body.hpp"
 
 Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
-  : m_integrator(new Integrator(environment, m_x, m_stepsize)),
-    m_environment(environment),
-    m_trajectory(new Trajectory(screen)),
-    m_drawable(new DrawableBody(screen, imageloc)),
+  :
     m_x(),
     m_xNew(),
     m_para(),
+    m_integrator(),
+    m_environment(environment),
+    m_trajectory(new Trajectory(screen)),
+    m_drawable(new DrawableBody(screen, imageloc)),
     m_nSteps(0),
     m_stepsize(import::getStepSize()),
     m_linerate(import::getLineRate())
@@ -25,6 +26,8 @@ Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
 
   m_para[0] = .1e1; // mass [kg]
   m_para[1] = 15.0; // radius [m]
+
+  m_integrator.reset(new Integrator(m_environment, m_x, m_stepsize));
 
   m_drawable->setSize(2*m_para[1]);
 
