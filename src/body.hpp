@@ -9,11 +9,12 @@
 #include "SDL/SDL.h"
 #include "trajectory.hpp"
 
-class DrawableBody;
+class Drawable;
 class Integrator;
 class Environment;
 
-class Body {
+class Body
+{
 public:
   Body(Environment* m_environment, SDL_Surface *screen, std::string imageloc);
   ~Body();
@@ -40,19 +41,18 @@ private:
   double random(double start, double end);
 
 private:
-  std::unique_ptr<Integrator> m_integrator;
-  Environment* m_environment;
-  std::unique_ptr<Trajectory> m_trajectory;
-  std::unique_ptr<DrawableBody> m_drawable;
-
   std::array<double, 4> m_x;
   std::array<double, 4> m_xNew;
   std::array<double, 2> m_para; // {mass, radius}
 
+  std::unique_ptr<Integrator> m_integrator;
+  Environment* m_environment;
+  std::unique_ptr<Trajectory> m_trajectory;
+  std::unique_ptr<Drawable> m_drawable;
+
   int m_nSteps;
   double m_stepsize;
   int m_linerate;
-
 };
 
 #endif /* BODY_H_ */

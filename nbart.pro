@@ -26,7 +26,6 @@ SOURCES += \
     src/importsettings.cpp \
     src/globfunctions.cpp \
     src/environment.cpp \
-    src/drawableBody.cpp \
     src/drawable.cpp \
     src/body.cpp \
     src/initialpattern.cpp \
@@ -46,7 +45,6 @@ HEADERS += \
     src/importsettings.hpp \
     src/globfunctions.hpp \
     src/environment.hpp \
-    src/drawableBody.hpp \
     src/body.hpp \
     src/initialpattern.hpp \
     src/gravityfield.hpp \

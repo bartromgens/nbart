@@ -1,5 +1,4 @@
 #include "drawable.hpp"
-#include "drawableBody.hpp"
 #include "integrator.hpp"
 #include "environment.hpp"
 #include "importsettings.hpp"
@@ -14,7 +13,7 @@ Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
     m_integrator(),
     m_environment(environment),
     m_trajectory(new Trajectory(screen)),
-    m_drawable(new DrawableBody(screen, imageloc)),
+    m_drawable(new Drawable(screen, imageloc)),
     m_nSteps(0),
     m_stepsize(import::getStepSize()),
     m_linerate(import::getLineRate())
