@@ -1,4 +1,4 @@
-QT       -= core gui
+QT       += core gui
 
 TEMPLATE = app
 
@@ -30,7 +30,10 @@ SOURCES += \
     src/drawable.cpp \
     src/body.cpp \
     src/initialpattern.cpp \
-    src/gravityfield.cpp
+    src/gravityfield.cpp \
+    src/mainwindow.cpp \
+    src/mainsimulator.cpp \
+    src/simulatorcontroller.cpp
 
 HEADERS += \
     src/drawable.hpp \
@@ -46,7 +49,10 @@ HEADERS += \
     src/drawableBody.hpp \
     src/body.hpp \
     src/initialpattern.hpp \
-    src/gravityfield.hpp
+    src/gravityfield.hpp \
+    src/mainwindow.h \
+    src/mainsimulator.h \
+    src/simulatorcontroller.h
 
 OTHER_FILES += \
     data/whiteball.png \
