@@ -7,3 +7,4 @@ Makefile
 screenshot.bmp
 nbart.creator.user
 doc/video/nBart_Demo.mp4
+moc_mainwindow.cpp
