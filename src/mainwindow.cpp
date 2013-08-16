@@ -21,9 +21,6 @@ MainWindow::MainWindow()
   createToolBars();
 
   createMainSimulator();
-  //  createStatusBar();
-
-  //  readSettings();
 }
 
 
@@ -56,6 +53,40 @@ MainWindow::createMainSimulator()
 
 
 void
+MainWindow::createActions()
+{
+  m_clearAct = new QAction(QIcon(":/images/clear.png"), tr("&Clear"), this);
+  connect(m_clearAct, SIGNAL(triggered()), this, SLOT(slotClearSimulator()));
+
+  m_playAct = new QAction(QIcon("./images/icons/play.png"), "&Play", this);
+  connect(m_playAct, SIGNAL(triggered()), this, SLOT(slotTogglePlay()));
+
+  m_closeAct = new QAction(QIcon("./images/icons/close.png"), "&Close", this);
+  connect(m_closeAct, SIGNAL(triggered()), this, SLOT(slotCloseSimulator()));
+}
+
+
+void
+MainWindow::createToolBars()
+{
+  m_fileToolBar = addToolBar(tr("File"));
+  m_fileToolBar->addAction(m_playAct);
+  m_fileToolBar->addAction(m_clearAct);
+  m_fileToolBar->addAction(m_closeAct);
+}
+
+
+void
+MainWindow::createMenus()
+{
+  m_fileMenu = menuBar()->addMenu(tr("&Simulation"));
+  m_fileMenu->addAction(m_playAct);
+  m_fileMenu->addAction(m_clearAct);
+  m_fileMenu->addAction(m_closeAct);
+}
+
+
+void
 MainWindow::slotCloseSimulator()
 {
   m_simulatorController->setClose(true);
@@ -64,26 +95,14 @@ MainWindow::slotCloseSimulator()
 
 
 void
-MainWindow::createActions()
+MainWindow::slotTogglePlay()
 {
-  m_newAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
-  m_newAct->setShortcuts(QKeySequence::New);
-  m_newAct->setStatusTip(tr("Create a new file"));
-  connect(m_newAct, SIGNAL(triggered()), this, SLOT(slotCloseSimulator()));
+  m_simulatorController->togglePlay();
 }
 
 
 void
-MainWindow::createToolBars()
+MainWindow::slotClearSimulator()
 {
-  m_fileToolBar = addToolBar(tr("File"));
-  m_fileToolBar->addAction(m_newAct);
-}
-
-
-void
-MainWindow::createMenus()
-{
-  m_fileMenu = menuBar()->addMenu(tr("&File"));
-  m_fileMenu->addAction(m_newAct);
+  m_simulatorController->setClear(true);
 }

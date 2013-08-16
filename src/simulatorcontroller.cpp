@@ -4,7 +4,12 @@
 
 SimulatorController::SimulatorController()
   : m_close(false),
-    m_clear(false)
+    m_clear(false),
+    m_play(true),
+    m_showBodies(true),
+    m_showTrajectories(false),
+    m_showField(false),
+    m_simulationSpeed(5.0)
 {
 }
 
@@ -23,9 +28,16 @@ SimulatorController::setClose(bool close)
 
 
 bool
-SimulatorController::getClose()
+SimulatorController::getClose() const
 {
   return m_close;
+}
+
+
+bool
+SimulatorController::getClear() const
+{
+  return m_clear;
 }
 
 
@@ -36,8 +48,105 @@ SimulatorController::setClear(bool clear)
 }
 
 
-bool
-SimulatorController::getClear() const
+void
+SimulatorController::togglePlay()
 {
-  return m_clear;
+  m_play = !m_play;
+}
+
+
+bool
+SimulatorController::getPlay() const
+{
+  return m_play;
+}
+
+
+bool
+SimulatorController::getShowTrajectories() const
+{
+  return m_showTrajectories;
+}
+
+
+void
+SimulatorController::setShowTrajectories(bool showTrajectories)
+{
+  m_showTrajectories = showTrajectories;
+}
+
+
+void
+SimulatorController::toggleShowTrajectories()
+{
+  m_showTrajectories = !m_showTrajectories;
+}
+
+
+bool
+SimulatorController::getShowField() const
+{
+  return m_showField;
+}
+
+
+void
+SimulatorController::setShowField(bool showField)
+{
+  m_showField = showField;
+}
+
+
+void
+SimulatorController::toggleShowField()
+{
+  m_showField = !m_showField;
+}
+
+
+double
+SimulatorController::getSimulationSpeed() const
+{
+  return m_simulationSpeed;
+}
+
+
+void
+SimulatorController::setSimulationSpeed(double simulationSpeed)
+{
+  m_simulationSpeed = simulationSpeed;
+}
+
+
+void
+SimulatorController::increaseSimulationSpeed()
+{
+  m_simulationSpeed = m_simulationSpeed * 1.1;
+}
+
+
+void
+SimulatorController::decreaseSimulationSpeed()
+{
+  m_simulationSpeed = m_simulationSpeed / 1.1;
+}
+
+
+bool
+SimulatorController::getShowBodies() const
+{
+  return m_showBodies;
+}
+
+
+void SimulatorController::setShowBodies(bool showBodies)
+{
+  m_showBodies = showBodies;
+}
+
+
+void
+SimulatorController::toggleShowBodies()
+{
+  m_showBodies != m_showBodies;
 }

@@ -4,6 +4,8 @@
 #include <memory>
 
 class SimulatorController;
+class Environment;
+class SDL_Surface;
 
 class MainSimulator
 {
@@ -13,6 +15,12 @@ public:
 
   void run();
 
+  void handleKeyAndMouseEvents(Environment* environment,
+                               SDL_Surface* screen,
+                               int &mousedownX,
+                               int &mousedownY,
+                               int &mouseupX,
+                               int &mouseupY);
 private:
   std::shared_ptr<SimulatorController> m_controller;
 };

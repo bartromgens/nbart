@@ -1,6 +1,5 @@
 #include "body.hpp"
 #include "drawable.hpp"
-#include "drawableBody.hpp"
 #include "environment.hpp"
 #include "globfunctions.hpp"
 #include "gravityfield.hpp"
