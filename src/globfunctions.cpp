@@ -24,7 +24,6 @@ gf::load_image(std::string filename, bool transparent)
 
     //Free the old image
     SDL_FreeSurface( loadedImage );
-
   }
   else
   {
@@ -52,7 +51,7 @@ gf::apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination )
 
 
 SDL_Surface*
-gf::init(SDL_Surface *screen, std::string windowtitle)
+gf::init(SDL_Surface* screen, std::string windowtitle)
 {
   // Initialize all SDL subsystems
   if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
@@ -64,11 +63,11 @@ gf::init(SDL_Surface *screen, std::string windowtitle)
   const SDL_VideoInfo* vidinfo = SDL_GetVideoInfo();
   if (import::getFullscreen() == 1)
   {
-    screen = SDL_SetVideoMode(  import::getHres(),  import::getVres(), 32, SDL_FULLSCREEN|SDL_HWSURFACE );
+    screen = SDL_SetVideoMode( import::getHres(), import::getVres(), 32, SDL_FULLSCREEN|SDL_HWSURFACE );
   }
   else
   {
-    screen = SDL_SetVideoMode(  import::getHres(),  import::getVres(), 32, SDL_HWSURFACE );
+    screen = SDL_SetVideoMode( import::getHres(), import::getVres(), 32, SDL_HWSURFACE );
   }
 
   // If there was an error in setting up the screen

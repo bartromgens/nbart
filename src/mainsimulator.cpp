@@ -196,7 +196,7 @@ MainSimulator::run()
   Environment* environment = new Environment(screen);
   std::cout << "Environment created... " << std::endl;
 
-  SDL_Surface *background = NULL;
+  SDL_Surface* background = NULL;
   background = gf::load_image( "./data/black.png" , false);
   std::cout << "Background loaded..." << std::endl;
 
@@ -289,6 +289,10 @@ MainSimulator::run()
   //Free the surfaces and quit SDL
   SDL_FreeSurface(screen);
   SDL_FreeSurface(background);
+
+  SDL_Quit();
+
+  delete environment;
 
   std::cout << "MainSimulator::run() - END" << std::endl;
 }
