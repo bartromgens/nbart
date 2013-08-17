@@ -90,9 +90,11 @@ MainSimulator::run()
 
     if (m_controller->getPlay())
     {
+      double tEnd = 1.0;
+      double stepsize = m_controller->getStepSize();
       for (int i = 0 ; i < m_controller->getSimulationSpeed(); i++)
       {
-        environment->oneStep();
+        environment->oneStep(tEnd, stepsize);
       }
     }
 
@@ -284,6 +286,7 @@ MainSimulator::handleMouseEvent(SDL_Event event, Environment* environment, SDL_S
     }
 
     Body* body = 0;
+
     //If the left mouse button was pressed
     if ( event.button.button == SDL_BUTTON_LEFT)
     {

@@ -77,25 +77,25 @@ Environment::drawTrajectories()
 
 
 void
-Environment::oneStep()
+Environment::oneStep(double tEnd, double stepsize)
 {
-  std::thread t(&Environment::oneStepImpl, this);
+  std::thread t(&Environment::oneStepImpl, this, tEnd, stepsize);
   t.detach();
 }
 
 
 void
-Environment::oneStepImpl()
+Environment::oneStepImpl(double tEnd, double stepsize)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
   for (std::size_t i = 0; i < m_bodies.size(); i++)
   {
-    m_bodies[i]->oneStep();
+    m_bodies[i]->oneStep(tEnd, stepsize);
   }
   for (std::size_t i = 0; i < m_masslessBodies.size(); i++)
   {
-    m_masslessBodies[i]->oneStep();
+    m_masslessBodies[i]->oneStep(tEnd, stepsize);
   }
 
   updateState();

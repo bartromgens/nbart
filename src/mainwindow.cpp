@@ -2,6 +2,7 @@
 
 #include "mainsimulator.h"
 #include "simulatorcontroller.h"
+#include "simulationsettingswidget.h"
 
 #include <cassert>
 #include <iostream>
@@ -14,7 +15,8 @@ MainWindow::MainWindow()
     m_simulatorController(new SimulatorController())
 {
   m_textEdit = new QPlainTextEdit;
-  setCentralWidget(m_textEdit);
+  SimulationSettingsWidget* simulationSettingsWidget = new SimulationSettingsWidget(m_simulatorController, this);
+  setCentralWidget(simulationSettingsWidget);
 
   createActions();
   createMenus();

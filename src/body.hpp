@@ -22,7 +22,7 @@ public:
   void draw();
   void drawTrajectory();
 
-  void oneStep();
+  void oneStep(double tEnd, double stepsize);
   void updateState();
 
   void setPosition(double m_x, double y);
@@ -51,7 +51,6 @@ private:
   std::unique_ptr<Drawable> m_drawable;
 
   int m_nSteps;
-  double m_stepsize;
   int m_linerate;
 };
 

@@ -1,9 +1,8 @@
 #include "integrator.hpp"
 
 
-Integrator::Integrator(Environment* environment, const std::array<double, 4>& x0, double stepsize)
+Integrator::Integrator(Environment* environment, const std::array<double, 4>& x0)
   : m_environment(environment),
-    m_stepsize(stepsize),
     x0(x0),
     x1(),
     px0(),
@@ -12,14 +11,20 @@ Integrator::Integrator(Environment* environment, const std::array<double, 4>& x0
 }
 
 
-const std::array<double, 4>&
-Integrator::integrate(double tend)
+Integrator::~Integrator()
 {
-  m_steps = tend/m_stepsize;
+  std::cout << "Integrator::~Integrator()" << std::endl;
+}
 
-  for (int i = 0; i < m_steps; i++)
+
+const std::array<double, 4>&
+Integrator::integrate(double tEnd, double stepsize)
+{
+  int steps = tEnd/std::fabs(stepsize);
+
+  for (int i = 0; i < steps; i++)
   {
-    oneStep();
+    oneStep(stepsize);
     updateState();
   }
 
@@ -28,26 +33,26 @@ Integrator::integrate(double tend)
 
 
 void
-Integrator::oneStep()
+Integrator::oneStep(double stepsize)
 {
   pforce1 = m_environment->getStateDerivative(x0);
   for (std::size_t j = 0; j < x0.size(); j++)
   {
-    k1[j] = m_stepsize * pforce1[j];
+    k1[j] = stepsize * pforce1[j];
     x0k1[j] = x0[j] + 1./2.* k1[j]; // used in next step
   }
 
   pforce2 = m_environment->getStateDerivative(x0k1);
   for (std::size_t j = 0; j < x0.size(); j++)
   {
-    k2[j] = m_stepsize * pforce2[j];
+    k2[j] = stepsize * pforce2[j];
     x0k2[j] = x0[j] + 1./2.* k2[j]; // used in next step
   }
 
   pforce3 = m_environment->getStateDerivative(x0k2);
   for (std::size_t j = 0; j < x0.size(); j++)
   {
-    k3[j] = m_stepsize * pforce3[j];
+    k3[j] = stepsize * pforce3[j];
     x0k3[j] = x0[j] + k3[j]; // used in next step
   }
 
@@ -55,7 +60,7 @@ Integrator::oneStep()
 
   for (std::size_t j = 0; j < x0.size(); j++)
   {
-    k4[j] = m_stepsize * pforce4[j];
+    k4[j] = stepsize * pforce4[j];
   }
 
   for (std::size_t i = 0; i < x0.size(); i++)
@@ -69,11 +74,4 @@ void
 Integrator::updateState()
 {
   x0 = x1;
-}
-
-
-void
-Integrator::setStepSize(double hin)
-{
-  m_stepsize = hin;
 }

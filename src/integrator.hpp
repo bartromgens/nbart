@@ -18,20 +18,18 @@
 class Integrator
 {
 public:
-  Integrator(Environment* environment, const std::array<double, 4>& x0, double stepsize);
-  const std::array<double, 4>& integrate(double m_tEnd);
-  void setStepSize(double hin);
+  Integrator(Environment* environment, const std::array<double, 4>& x0);
+  ~Integrator();
+
+  const std::array<double, 4>& integrate(double tEnd, double stepsize);
 
   void updateState();
 
 private:
-  void oneStep();
+  void oneStep(double stepsize);
 
 private:
   Environment* m_environment;
-
-  double m_stepsize;
-  double m_tEnd;
 
   std::array<double, 4> x0;
   std::array<double, 4> x1;
@@ -52,8 +50,6 @@ private:
   std::array<double, 4> pforce2;
   std::array<double, 4> pforce3;
   std::array<double, 4> pforce4;
-
-  int m_steps;
 };
 
 #endif /*INTEGRATOR_H_*/

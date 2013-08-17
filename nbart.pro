@@ -32,7 +32,8 @@ SOURCES += \
     src/gravityfield.cpp \
     src/mainwindow.cpp \
     src/mainsimulator.cpp \
-    src/simulatorcontroller.cpp
+    src/simulatorcontroller.cpp \
+    src/simulationsettingswidget.cpp
 
 HEADERS += \
     src/drawable.hpp \
@@ -50,7 +51,8 @@ HEADERS += \
     src/gravityfield.hpp \
     src/mainwindow.h \
     src/mainsimulator.h \
-    src/simulatorcontroller.h
+    src/simulatorcontroller.h \
+    src/simulationsettingswidget.h
 
 OTHER_FILES += \
     data/whiteball.png \
@@ -66,5 +68,8 @@ OTHER_FILES += \
     data/icons/edit-clear.png \
     data/icons/document-open.png \
     data/icons/process-stop.png
+
+FORMS += \
+    src/simulationsettingswidget.ui
 
 

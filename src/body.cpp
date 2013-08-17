@@ -6,8 +6,7 @@
 #include "body.hpp"
 
 Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
-  :
-    m_x(),
+  : m_x(),
     m_xNew(),
     m_para(),
     m_integrator(),
@@ -15,7 +14,6 @@ Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
     m_trajectory(new Trajectory(screen)),
     m_drawable(new Drawable(screen, imageloc)),
     m_nSteps(0),
-    m_stepsize(import::getStepSize()),
     m_linerate(import::getLineRate())
 {
   m_x[0] = 200.0;
@@ -26,7 +24,7 @@ Body::Body(Environment* environment, SDL_Surface *screen, std::string imageloc)
   m_para[0] = .1e1; // mass [kg]
   m_para[1] = 15.0; // radius [m]
 
-  m_integrator.reset(new Integrator(m_environment, m_x, m_stepsize));
+  m_integrator.reset(new Integrator(m_environment, m_x));
 
   m_drawable->setSize(2*m_para[1]);
 
@@ -54,9 +52,9 @@ Body::drawTrajectory()
 
 
 void
-Body::oneStep()
+Body::oneStep(double tEnd, double stepsize)
 {
-  m_xNew = m_integrator->integrate(1);
+  m_xNew = m_integrator->integrate(tEnd, stepsize);
 }
 
 
@@ -80,7 +78,7 @@ Body::setPosition(double xin, double yin)
 {
   m_x[0] = xin;
   m_x[1] = yin;
-  m_integrator.reset(new Integrator(m_environment, m_x, m_stepsize));
+  m_integrator.reset(new Integrator(m_environment, m_x));
   setScreenCenterPos((int)m_x[0],(int)m_x[1]);
 }
 
@@ -90,7 +88,7 @@ Body::setVelocity(double vxin, double vyin)
 {
   m_x[2] = vxin;
   m_x[3] = vyin;
-  m_integrator.reset(new Integrator(m_environment, m_x, m_stepsize));
+  m_integrator.reset(new Integrator(m_environment, m_x));
 }
 
 

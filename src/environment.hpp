@@ -17,7 +17,7 @@ public:
   void mergeBodies();
   void clearAllBodies();
 
-  void oneStep();
+  void oneStep(double tEnd, double stepsize);
 
   void drawBodies();
   void drawTrajectories();
@@ -31,7 +31,7 @@ public:
 protected:
 
 private:
-  void oneStepImpl();
+  void oneStepImpl(double tEnd, double stepsize);
   void updateState();
 
 private:

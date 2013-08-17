@@ -35,6 +35,9 @@ public:
   void setShowBodies(bool showBodies);
   void toggleShowBodies();
 
+  double getStepSize() const;
+  void setStepSize(double stepsize);
+
 private:
   std::atomic<bool> m_close;
   std::atomic<bool> m_clear;
@@ -43,6 +46,7 @@ private:
   std::atomic<bool> m_showTrajectories;
   std::atomic<bool> m_showField;
   std::atomic<double> m_simulationSpeed;
+  std::atomic<double> m_stepsize;
 };
 
 #endif // SIMULATORCONTROLLER_H

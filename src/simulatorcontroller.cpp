@@ -9,7 +9,8 @@ SimulatorController::SimulatorController()
     m_showBodies(true),
     m_showTrajectories(false),
     m_showField(false),
-    m_simulationSpeed(5.0)
+    m_simulationSpeed(5.0),
+    m_stepsize(0.05)
 {
 }
 
@@ -149,4 +150,18 @@ void
 SimulatorController::toggleShowBodies()
 {
   m_showBodies = !m_showBodies;
+}
+
+
+void
+SimulatorController::setStepSize(double stepsize)
+{
+  m_stepsize = stepsize;
+}
+
+
+double
+SimulatorController::getStepSize() const
+{
+  return m_stepsize;
 }
