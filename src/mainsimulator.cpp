@@ -30,12 +30,126 @@ MainSimulator::~MainSimulator()
 }
 
 
-void MainSimulator::handleKeyAndMouseEvents(Environment* environment,
-                                            SDL_Surface* screen,
-                                            int& mousedownX,
-                                            int& mousedownY,
-                                            int& mouseupX,
-                                            int& mouseupY)
+void
+MainSimulator::run()
+{
+  std::cout << "MainSimulator::run()" << std::endl;
+
+  const int SCREEN_WIDTH = import::getHres();
+  const int SCREEN_HEIGHT = import::getVres();
+  const int FRAMES_PER_SECOND = import::getFPS();
+
+  // initialize SDL objects
+  SDL_Surface *screen = NULL;
+  screen = gf::init(screen, "SDL template Title");
+  std::cout << "SDL screen initialized... " << std::endl;
+
+  // initialze auxiliary
+  int frame = 0;
+  srand ( time(NULL) );
+
+  Environment* environment = new Environment(screen);
+  std::cout << "Environment created... " << std::endl;
+
+  SDL_Surface* background = NULL;
+  background = gf::load_image( "./data/black.png" , false);
+  std::cout << "Background loaded..." << std::endl;
+
+  const int TILE_SIZE = 20;
+  const int TILE_BORDER_SIZE = 2;
+  const int H_TILES = SCREEN_WIDTH/TILE_SIZE;
+  const int V_TILES = SCREEN_HEIGHT/TILE_SIZE;
+
+  GravityField gravityField(V_TILES, H_TILES, TILE_SIZE, TILE_BORDER_SIZE);
+
+  int startFPS = SDL_GetTicks();
+
+  MouseState mouseState;
+
+  //While the user hasn't quit
+  while (!m_controller->getClose())
+  {
+    int startFrameTime = SDL_GetTicks();
+    //Update the screen
+    if( SDL_Flip( screen ) == -1 )
+    {
+      break;
+    }
+    //Increment the frame counter
+    frame++;
+
+    //While there's events to handle
+    handleKeyAndMouseEvents(environment, screen, mouseState);
+
+    gf::apply_surface( 0, 0 , background, screen );
+
+    if (m_controller->getClear())
+    {
+      environment->clearAllBodies();
+      m_controller->setClear(false);
+    }
+
+    if (m_controller->getPlay())
+    {
+      for (int i = 0 ; i < m_controller->getSimulationSpeed(); i++)
+      {
+        environment->oneStep();
+      }
+    }
+
+    // Draw Field
+    if (m_controller->getShowField())
+    {
+      gravityField.draw(screen, environment);
+    }
+
+    // Draw Trajectory
+    if (m_controller->getShowTrajectories())
+    {
+      environment->drawTrajectories();
+    }
+
+    // Draw Bodies
+    if (m_controller->getShowBodies())
+    {
+      environment->drawBodies();
+    }
+
+//    // Check for Collisions
+//    if (mergeBodies)
+//    {
+//      environment->mergeBodies();
+//    }
+
+    //Sleep the remaining frame time
+    double timeleft = ( 1000.0 / FRAMES_PER_SECOND ) - (SDL_GetTicks()-startFrameTime);
+    if ( frame%FRAMES_PER_SECOND == 0)
+    {
+      int timeFPSframes = SDL_GetTicks()-startFPS;
+      std::cout << "fps: " << round(FRAMES_PER_SECOND/(timeFPSframes/1000.0)) << std::endl;
+      startFPS = SDL_GetTicks();
+    }
+
+    if (timeleft > 0)
+    {
+      SDL_Delay(timeleft);
+    }
+  }
+
+  //Free the surfaces and quit SDL
+  SDL_FreeSurface(screen);
+  SDL_FreeSurface(background);
+
+  SDL_Quit();
+
+  delete environment;
+
+  std::cout << "MainSimulator::run() - END" << std::endl;
+}
+
+
+void
+MainSimulator::handleKeyAndMouseEvents(Environment* environment, SDL_Surface* screen, MouseState& mouseState)
 {
   SDL_Event event;
   bool mergeBodies = false;
@@ -43,7 +157,6 @@ void MainSimulator::handleKeyAndMouseEvents(Environment* environment,
 
   while( SDL_PollEvent( &event ) )
   {
-
     //If the user has Xed out the window
     if( event.type == SDL_QUIT )
     {
@@ -125,12 +238,12 @@ void MainSimulator::handleKeyAndMouseEvents(Environment* environment,
       //If the left mouse button was pressed
       if ( event.button.button == SDL_BUTTON_LEFT)
       {
-        SDL_GetMouseState(&mousedownX, &mousedownY);
+        SDL_GetMouseState(&mouseState.m_mousedownX, &mouseState.m_mousedownY);
         std::cout << "Left Mouse Down..." << std::endl;
       }
       else if ( event.button.button == SDL_BUTTON_RIGHT)
       {
-        SDL_GetMouseState(&mousedownX, &mousedownY);
+        SDL_GetMouseState(&mouseState.m_mousedownX, &mouseState.m_mousedownY);
         std::cout << "Right Mouse Down..." << std::endl;
       }
       else if( event.button.button == SDL_BUTTON_WHEELUP )
@@ -146,153 +259,39 @@ void MainSimulator::handleKeyAndMouseEvents(Environment* environment,
     //If a mouse button was released
     if( event.type == SDL_MOUSEBUTTONUP )
     {
+      if (event.button.button == SDL_BUTTON_LEFT
+          || event.button.button == SDL_BUTTON_RIGHT)
+      {
+        SDL_GetMouseState(&mouseState.m_mouseupX, &mouseState.m_mouseupY);
+      }
+      else
+      {
+        break;
+      }
+
+      Body* body = 0;
       //If the left mouse button was pressed
       if ( event.button.button == SDL_BUTTON_LEFT)
       {
-        SDL_GetMouseState(&mouseupX, &mouseupY);
-        std::cout << "Left Mouse Up..." << std::endl;
-        Body* body = new Body(environment, screen, "./data/blurball.png");
-        environment->addBody(body);
+        body = new Body(environment, screen, "./data/blurball.png");
         body->setMass(newMass);
-        body->setPosition(mousedownX, mousedownY);
-        body->setRadius(sqrt(newMass*20));
-        body->setVelocity((mouseupX-mousedownX)/500.0,(mouseupY-mousedownY)/500.0);
+        body->setRadius(sqrt(newMass*20));\
+        environment->addBody(body);
       }
       else if ( event.button.button == SDL_BUTTON_RIGHT)
       {
-        SDL_GetMouseState(&mouseupX, &mouseupY);
-        std::cout << "Right Mouse Up..." << std::endl;
-        Body* body = new Body(environment, screen, "./data/greenball.png");
-
+        body = new Body(environment, screen, "./data/greenball.png");
         body->setMass(0.1);
-        body->setPosition(mousedownX, mousedownY);
         body->setRadius(sqrt(0.4*20));
-        body->setVelocity((mouseupX-mousedownX)/500.0,(mouseupY-mousedownY)/500.0);
         environment->addMasslessBody(body);
       }
+
+      double vx = (mouseState.m_mouseupX - mouseState.m_mousedownX) / 500.0;
+      double vy = (mouseState.m_mouseupY - mouseState.m_mousedownY) / 500.0;
+      body->setPosition(mouseState.m_mousedownX, mouseState.m_mousedownY);
+      std::cout << "MainSimulator::handleKeyAndMouseEvents() - vx: " << vx << std::endl;
+      std::cout << "MainSimulator::handleKeyAndMouseEvents() - vy: " << vy << std::endl;
+      body->setVelocity(vx, vy);
     }
   }
-}
-
-
-void
-MainSimulator::run()
-{
-  std::cout << "MainSimulator::run()" << std::endl;
-
-  const int SCREEN_WIDTH = import::getHres();
-  const int SCREEN_HEIGHT = import::getVres();
-  const int FRAMES_PER_SECOND = import::getFPS();
-
-  // initialize SDL objects
-  SDL_Surface *screen = NULL;
-  screen = gf::init(screen, "SDL template Title");
-  std::cout << "SDL screen initialized... " << std::endl;
-
-  // initialze auxiliary
-  int frame = 0;
-  srand ( time(NULL) );
-
-  Environment* environment = new Environment(screen);
-  std::cout << "Environment created... " << std::endl;
-
-  SDL_Surface* background = NULL;
-  background = gf::load_image( "./data/black.png" , false);
-  std::cout << "Background loaded..." << std::endl;
-
-  const int TILE_SIZE = 20;
-  const int TILE_BORDER_SIZE = 2;
-  const int H_TILES = SCREEN_WIDTH/TILE_SIZE;
-  const int V_TILES = SCREEN_HEIGHT/TILE_SIZE;
-
-  GravityField gravityField(V_TILES, H_TILES, TILE_SIZE, TILE_BORDER_SIZE);
-
-  int startFPS = SDL_GetTicks();
-
-  int mousedownX, mousedownY, mouseupX, mouseupY;
-
-  //While the user hasn't quit
-  while (!m_controller->getClose())
-  {
-    int startFrameTime = SDL_GetTicks();
-    //Update the screen
-    if( SDL_Flip( screen ) == -1 )
-    {
-      break;
-    }
-    //Increment the frame counter
-    frame++;
-
-    //While there's events to handle
-    handleKeyAndMouseEvents(environment,
-                            screen,
-                            mousedownX,
-                            mousedownY,
-                            mouseupX,
-                            mouseupY);
-
-    gf::apply_surface( 0, 0 , background, screen );
-
-    if (m_controller->getClear())
-    {
-      environment->clearAllBodies();
-      m_controller->setClear(false);
-    }
-
-    if (m_controller->getPlay())
-    {
-      for (int i = 0 ; i < m_controller->getSimulationSpeed(); i++)
-      {
-        environment->oneStep();
-      }
-    }
-
-    // Draw Field
-    if (m_controller->getShowField())
-    {
-      gravityField.draw(screen, environment);
-    }
-
-    // Draw Trajectory
-    if (m_controller->getShowTrajectories())
-    {
-      environment->drawTrajectories();
-    }
-
-    // Draw Bodies
-    if (m_controller->getShowBodies())
-    {
-      environment->drawBodies();
-    }
-
-//    // Check for Collisions
-//    if (mergeBodies)
-//    {
-//      environment->mergeBodies();
-//    }
-
-    //Sleep the remaining frame time
-    double timeleft = ( 1000.0 / FRAMES_PER_SECOND ) - (SDL_GetTicks()-startFrameTime);
-    if ( frame%FRAMES_PER_SECOND == 0)
-    {
-      int timeFPSframes = SDL_GetTicks()-startFPS;
-      std::cout << "fps: " << round(FRAMES_PER_SECOND/(timeFPSframes/1000.0)) << std::endl;
-      startFPS = SDL_GetTicks();
-    }
-
-    if (timeleft > 0)
-    {
-      SDL_Delay(timeleft);
-    }
-  }
-
-  //Free the surfaces and quit SDL
-  SDL_FreeSurface(screen);
-  SDL_FreeSurface(background);
-
-  SDL_Quit();
-
-  delete environment;
-
-  std::cout << "MainSimulator::run() - END" << std::endl;
 }

@@ -7,6 +7,14 @@ class SimulatorController;
 class Environment;
 class SDL_Surface;
 
+struct MouseState
+{
+  int m_mousedownX;
+  int m_mousedownY;
+  int m_mouseupX;
+  int m_mouseupY;
+};
+
 class MainSimulator
 {
 public:
@@ -17,10 +25,7 @@ public:
 
   void handleKeyAndMouseEvents(Environment* environment,
                                SDL_Surface* screen,
-                               int &mousedownX,
-                               int &mousedownY,
-                               int &mouseupX,
-                               int &mouseupY);
+                               MouseState& mouseState);
 private:
   std::shared_ptr<SimulatorController> m_controller;
 };
