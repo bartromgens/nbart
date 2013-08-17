@@ -148,5 +148,5 @@ void SimulatorController::setShowBodies(bool showBodies)
 void
 SimulatorController::toggleShowBodies()
 {
-  m_showBodies != m_showBodies;
+  m_showBodies = !m_showBodies;
 }
