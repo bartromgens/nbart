@@ -24,6 +24,7 @@ public:
 
 private:
   void createMainSimulator();
+  void closeSimulator();
 
 private slots:
   void slotTogglePlay();

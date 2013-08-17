@@ -28,16 +28,7 @@ MainWindow::~MainWindow()
 {
   std::cout << "MainWindow::~MainWindow() - START" << std::endl;
 
-  if (m_simulatorThread->joinable())
-  {
-    m_simulatorThread->join();
-  }
-
-  if (m_mainSimulator)
-  {
-    delete m_mainSimulator;
-    m_mainSimulator = 0;
-  }
+  closeSimulator();
 
   std::cout << "MainWindow::~MainWindow() - END" << std::endl;
 }
@@ -53,15 +44,33 @@ MainWindow::createMainSimulator()
 
 
 void
+MainWindow::closeSimulator()
+{
+  m_simulatorController->setClose(true);
+
+  if (m_simulatorThread->joinable())
+  {
+    m_simulatorThread->join();
+  }
+
+  if (m_mainSimulator)
+  {
+    delete m_mainSimulator;
+    m_mainSimulator = 0;
+  }
+}
+
+
+void
 MainWindow::createActions()
 {
-  m_clearAct = new QAction(QIcon(":/images/clear.png"), tr("&Clear"), this);
+  m_clearAct = new QAction(QIcon("./data/icons/edit-clear.png"), tr("&Clear"), this);
   connect(m_clearAct, SIGNAL(triggered()), this, SLOT(slotClearSimulator()));
 
-  m_playAct = new QAction(QIcon("./images/icons/play.png"), "&Play", this);
+  m_playAct = new QAction(QIcon("./data/icons/media-playback-pause.png"), "&Play", this);
   connect(m_playAct, SIGNAL(triggered()), this, SLOT(slotTogglePlay()));
 
-  m_closeAct = new QAction(QIcon("./images/icons/close.png"), "&Close", this);
+  m_closeAct = new QAction(QIcon("./data/icons/process-stop.png"), "&Close", this);
   connect(m_closeAct, SIGNAL(triggered()), this, SLOT(slotCloseSimulator()));
 }
 
@@ -89,8 +98,7 @@ MainWindow::createMenus()
 void
 MainWindow::slotCloseSimulator()
 {
-  m_simulatorController->setClose(true);
-  m_simulatorThread->join();
+  closeSimulator();
 }
 
 
@@ -98,6 +106,14 @@ void
 MainWindow::slotTogglePlay()
 {
   m_simulatorController->togglePlay();
+  if (m_simulatorController->getPlay())
+  {
+    m_playAct->setIcon(QIcon("./data/icons/media-playback-pause.png"));
+  }
+  else
+  {
+    m_playAct->setIcon(QIcon("./data/icons/media-playback-start.png"));
+  }
 }
 
 

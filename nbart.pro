@@ -59,6 +59,12 @@ OTHER_FILES += \
     data/greenball.png \
     data/blurball.png \
     data/black.png \
-    settings.txt
+    settings.txt \
+    data/icons/media-playback-stop.png \
+    data/icons/media-playback-start.png \
+    data/icons/media-playback-pause.png \
+    data/icons/edit-clear.png \
+    data/icons/document-open.png \
+    data/icons/process-stop.png
 
 
