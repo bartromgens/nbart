@@ -92,7 +92,7 @@ Environment::oneStepImpl(double tEnd, double stepsize)
   std::lock_guard<std::mutex> lock(m_mutex);
 
   double stepsizeAbsolute = std::fabs(stepsize);
-  if (stepsizeAbsolute < 1.0e-4)
+  if (stepsizeAbsolute < 1.0e-6)
   {
     std::cerr << "Environment::oneStepImpl() - ERROR: stepsize too small: " << stepsize << std::endl;
     return;

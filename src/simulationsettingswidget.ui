@@ -39,6 +39,9 @@
    </item>
    <item row="0" column="2">
     <widget class="QDoubleSpinBox" name="speedSpinBox">
+     <property name="decimals">
+      <number>2</number>
+     </property>
      <property name="minimum">
       <double>0.000000000000000</double>
      </property>
@@ -60,10 +63,10 @@
    <item row="1" column="1">
     <widget class="QSlider" name="stepsizeSlider">
      <property name="minimum">
-      <number>-100</number>
+      <number>-1000</number>
      </property>
      <property name="maximum">
-      <number>100</number>
+      <number>1000</number>
      </property>
      <property name="value">
       <number>5</number>
@@ -75,6 +78,9 @@
    </item>
    <item row="1" column="2">
     <widget class="QDoubleSpinBox" name="stepsizeSpinBox">
+     <property name="decimals">
+      <number>3</number>
+     </property>
      <property name="minimum">
       <double>-1.000000000000000</double>
      </property>

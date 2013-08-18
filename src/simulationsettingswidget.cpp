@@ -32,7 +32,7 @@ SimulationSettingsWidget::~SimulationSettingsWidget()
 void
 SimulationSettingsWidget::slotStepsizeSliderChanged(int stepsizeInteger)
 {
-  double stepsize = stepsizeInteger / 100.0;
+  double stepsize = stepsizeInteger / 1000.0;
   m_controller->setStepSize(stepsize);
   ui->stepsizeSpinBox->setValue(stepsize);
 }
@@ -41,7 +41,7 @@ SimulationSettingsWidget::slotStepsizeSliderChanged(int stepsizeInteger)
 void
 SimulationSettingsWidget::slotStepsizeSpinBoxChanged(double stepsize)
 {
-  int stepsizeInteger = stepsize * 100.0;
+  int stepsizeInteger = stepsize * 1000.0;
   ui->stepsizeSlider->setValue(stepsizeInteger);
 }
 

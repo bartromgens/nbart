@@ -65,7 +65,7 @@ Body::updateState()
 
   if (m_nSteps%(10*m_linerate) == 0)
   {
-    m_trajectory->addPoint(m_x[0],m_x[1]);
+    m_trajectory->addPoint(m_x[0], m_x[1]);
   }
 
   setScreenCenterPos( static_cast<int>(m_x[0]), static_cast<int>(m_x[1]) );
