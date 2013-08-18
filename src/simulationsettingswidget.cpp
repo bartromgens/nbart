@@ -15,6 +15,11 @@ SimulationSettingsWidget::SimulationSettingsWidget(std::shared_ptr<SimulatorCont
   connect(ui->stepsizeSlider, SIGNAL(valueChanged(int)), this, SLOT(slotStepsizeSliderChanged(int)));
   connect(ui->stepsizeSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotStepsizeSpinBoxChanged(double)));
 
+  connect(ui->speedSlider, SIGNAL(valueChanged(int)), this, SLOT(slotSpeedSliderChanged(int)));
+  connect(ui->speedSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotSpeedSpinBoxChanged(double)));
+
+  ui->speedSpinBox->setValue(m_controller->getSimulationSpeed());
+  ui->stepsizeSpinBox->setValue(m_controller->getStepSize());
 }
 
 
@@ -27,7 +32,6 @@ SimulationSettingsWidget::~SimulationSettingsWidget()
 void
 SimulationSettingsWidget::slotStepsizeSliderChanged(int stepsizeInteger)
 {
-  std::cout << "slotStepsizeSliderChanged()" << std::endl;
   double stepsize = stepsizeInteger / 100.0;
   m_controller->setStepSize(stepsize);
   ui->stepsizeSpinBox->setValue(stepsize);
@@ -37,7 +41,23 @@ SimulationSettingsWidget::slotStepsizeSliderChanged(int stepsizeInteger)
 void
 SimulationSettingsWidget::slotStepsizeSpinBoxChanged(double stepsize)
 {
-  std::cout << "slotStepsizeSpinBoxChanged()" << std::endl;
   int stepsizeInteger = stepsize * 100.0;
   ui->stepsizeSlider->setValue(stepsizeInteger);
+}
+
+
+void
+SimulationSettingsWidget::slotSpeedSliderChanged(int speedInteger)
+{
+  double speed = static_cast<double>(speedInteger);
+  m_controller->setSimulationSpeed(speed);
+  ui->speedSpinBox->setValue(speed);
+}
+
+
+void
+SimulationSettingsWidget::slotSpeedSpinBoxChanged(double speed)
+{
+  int speedInteger = static_cast<double>(speed);
+  ui->speedSlider->setValue(speedInteger);
 }

@@ -21,7 +21,7 @@ public:
   Integrator(Environment* environment, const std::array<double, 4>& x0);
   ~Integrator();
 
-  const std::array<double, 4>& integrate(double tEnd, double stepsize);
+  const std::array<double, 4>& integrate(double stepsize);
 
   void updateState();
 

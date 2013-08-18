@@ -1,10 +1,12 @@
-#include <cmath>
-#include <functional>
-#include <thread>
 
 #include "importsettings.hpp"
 
 #include "environment.hpp"
+
+#include <cmath>
+#include <cassert>
+#include <functional>
+#include <thread>
 
 
 Environment::Environment(SDL_Surface* screen)
@@ -89,16 +91,29 @@ Environment::oneStepImpl(double tEnd, double stepsize)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  for (std::size_t i = 0; i < m_bodies.size(); i++)
+  double stepsizeAbsolute = std::fabs(stepsize);
+  if (stepsizeAbsolute < 1.0e-4)
   {
-    m_bodies[i]->oneStep(tEnd, stepsize);
-  }
-  for (std::size_t i = 0; i < m_masslessBodies.size(); i++)
-  {
-    m_masslessBodies[i]->oneStep(tEnd, stepsize);
+    std::cerr << "Environment::oneStepImpl() - ERROR: stepsize too small: " << stepsize << std::endl;
+    return;
   }
 
-  updateState();
+  int steps = tEnd/stepsizeAbsolute;
+  assert(steps >= 0);
+
+  for (int i = 0; i < steps; ++i)
+  {
+    for (std::size_t i = 0; i < m_bodies.size(); i++)
+    {
+      m_bodies[i]->oneStep(stepsize);
+    }
+    for (std::size_t i = 0; i < m_masslessBodies.size(); i++)
+    {
+      m_masslessBodies[i]->oneStep(stepsize);
+    }
+
+    updateState();
+  }
 }
 
 

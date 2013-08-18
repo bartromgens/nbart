@@ -52,9 +52,9 @@ Body::drawTrajectory()
 
 
 void
-Body::oneStep(double tEnd, double stepsize)
+Body::oneStep(double stepsize)
 {
-  m_xNew = m_integrator->integrate(tEnd, stepsize);
+  m_xNew = m_integrator->integrate(stepsize);
 }
 
 
@@ -68,7 +68,7 @@ Body::updateState()
     m_trajectory->addPoint(m_x[0],m_x[1]);
   }
 
-  setScreenCenterPos((int)m_x[0],(int)m_x[1]);
+  setScreenCenterPos( static_cast<int>(m_x[0]), static_cast<int>(m_x[1]) );
   m_nSteps++;
 }
 

@@ -90,12 +90,12 @@ MainSimulator::run()
 
     if (m_controller->getPlay())
     {
-      double tEnd = 1.0;
       double stepsize = m_controller->getStepSize();
-      for (int i = 0 ; i < m_controller->getSimulationSpeed(); i++)
-      {
-        environment->oneStep(tEnd, stepsize);
-      }
+//      double tEnd = stepsize;
+//      for (int i = 0 ; i < ; i++)
+//      {
+        environment->oneStep(m_controller->getSimulationSpeed(), stepsize);
+//      }
     }
 
     // Draw Field

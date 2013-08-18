@@ -24,6 +24,8 @@ private slots:
 
   void slotStepsizeSpinBoxChanged(double stepsize);
 
+  void slotSpeedSliderChanged(int speedInteger);
+  void slotSpeedSpinBoxChanged(double speed);
 private:
   Ui::SimulationSettingsWidget *ui;
 

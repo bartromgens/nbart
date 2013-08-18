@@ -18,15 +18,10 @@ Integrator::~Integrator()
 
 
 const std::array<double, 4>&
-Integrator::integrate(double tEnd, double stepsize)
+Integrator::integrate(double stepsize)
 {
-  int steps = tEnd/std::fabs(stepsize);
-
-  for (int i = 0; i < steps; i++)
-  {
-    oneStep(stepsize);
-    updateState();
-  }
+  oneStep(stepsize);
+  updateState();
 
   return x0;
 }

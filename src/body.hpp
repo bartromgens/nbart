@@ -22,7 +22,7 @@ public:
   void draw();
   void drawTrajectory();
 
-  void oneStep(double tEnd, double stepsize);
+  void oneStep(double stepsize);
   void updateState();
 
   void setPosition(double m_x, double y);
