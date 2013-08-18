@@ -11,9 +11,8 @@
 
 Environment::Environment(SDL_Surface* screen)
   : m_screen(screen),
-    hres(import::getHres()),
-    vres(import::getVres()),
-    m_nBodies(import::getNBodies())
+    m_hres(import::getHres()),
+    m_vres(import::getVres())
 {
 }
 
@@ -147,12 +146,12 @@ Environment::getStateDerivative(const std::array<double, 4>& x)
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
   {
-    x2 = (*iter)->getState();
-    if (x2[0] != x[0] && x2[1] != x[1])
+    m_x2 = (*iter)->getState();
+    if (m_x2[0] != x[0] && m_x2[1] != x[1])
     {
       mass = (*iter)->getMass();
-      x12[0] = x[0]-x2[0];
-      x12[1] = x[1]-x2[1];
+      x12[0] = x[0]-m_x2[0];
+      x12[1] = x[1]-m_x2[1];
       r = sqrt(x12[0]*x12[0]+x12[1]*x12[1]);
       if (r > 10)
       {
@@ -178,26 +177,26 @@ Environment::mergeBodies()
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end();)
   {
-    x1 = (*iter)->getState();
-    para1 = (*iter)->getParameters();
+    m_x1 = (*iter)->getState();
+    m_para1 = (*iter)->getParameters();
 
     for (auto iter2 = m_bodies.begin(); iter2 != m_bodies.end();)
     {
-      x2 = (*iter2)->getState();
-      para2 = (*iter2)->getParameters();
-      x12 = x2[0]-x1[0];
-      y12 = x2[1]-x1[1];
+      m_x2 = (*iter2)->getState();
+      m_para2 = (*iter2)->getParameters();
+      x12 = m_x2[0]-m_x1[0];
+      y12 = m_x2[1]-m_x1[1];
       r12 = sqrt(x12*x12+y12*y12);
 
-      if ( (iter2 != iter) && (r12 < (para1[1]+para2[1])) )
+      if ( (iter2 != iter) && (r12 < (m_para1[1]+m_para2[1])) )
       {
         localcol = true;
         std::cout << "Collision" << std::endl;
-        massNew = (para1[0]+para2[0]);
-        xNew = (x1[0]*para1[0]+x2[0]*para2[0])/massNew;
-        yNew = (x1[1]*para1[0]+x2[1]*para2[0])/massNew;
-        vxNew = (para1[0]*x1[2]+para2[0]*x2[2]) / massNew;
-        vyNew = (para1[0]*x1[3]+para2[0]*x2[3]) / massNew;
+        massNew = (m_para1[0]+m_para2[0]);
+        xNew = (m_x1[0]*m_para1[0]+m_x2[0]*m_para2[0])/massNew;
+        yNew = (m_x1[1]*m_para1[0]+m_x2[1]*m_para2[0])/massNew;
+        vxNew = (m_para1[0]*m_x1[2]+m_para2[0]*m_x2[2]) / massNew;
+        vyNew = (m_para1[0]*m_x1[3]+m_para2[0]*m_x2[3]) / massNew;
 
         iter2 = m_bodies.erase(iter2);
         break;
@@ -276,23 +275,23 @@ Environment::getEnergy()
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
   {
-    x1 = (*iter)->getState();
-    para1 = (*iter)->getParameters();
+    m_x1 = (*iter)->getState();
+    m_para1 = (*iter)->getParameters();
 
     for (auto iter2 = m_bodies.begin(); iter2 != m_bodies.end(); iter2++)
     {
       if (iter2 != iter)
       {
-        x2 = (*iter2)->getState();
-        para2 = (*iter2)->getParameters();
-        x12 = x2[0]-x1[0];
-        y12 = x2[1]-x1[1];
+        m_x2 = (*iter2)->getState();
+        m_para2 = (*iter2)->getParameters();
+        x12 = m_x2[0]-m_x1[0];
+        y12 = m_x2[1]-m_x1[1];
         r12 = sqrt(x12*x12+y12*y12);
 
-        potentialEnergy -= para1[0]*para2[0]/r12;
+        potentialEnergy -= m_para1[0]*m_para2[0]/r12;
       }
     }
-    kineticEnergy += 0.5*para1[0]*(x1[2]*x1[2]+x1[3]*x1[3]);
+    kineticEnergy += 0.5*m_para1[0]*(m_x1[2]*m_x1[2]+m_x1[3]*m_x1[3]);
   }
 
   energy = 2*kineticEnergy + potentialEnergy;
@@ -307,9 +306,9 @@ Environment::getLinearMomentum()
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
   {
-    x1 = (*iter)->getState();
-    para1 = (*iter)->getParameters();
-    linearMomentum += para1[0]*x1[2];
+    m_x1 = (*iter)->getState();
+    m_para1 = (*iter)->getParameters();
+    linearMomentum += m_para1[0]*m_x1[2];
   }
 
   return linearMomentum;

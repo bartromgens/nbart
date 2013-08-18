@@ -38,14 +38,14 @@ private:
   SDL_Surface* m_screen;
   std::vector<Body*> m_bodies;
   std::vector<Body*> m_masslessBodies;
-  int hres, vres;
-  int m_nBodies;
+  int m_hres;
+  int m_vres;
 
-  std::array<double, 4> x1;
-  std::array<double, 4> x2;
+  std::array<double, 4> m_x1;
+  std::array<double, 4> m_x2;
 
-  std::array<double, 2> para1;
-  std::array<double, 2> para2;
+  std::array<double, 2> m_para1;
+  std::array<double, 2> m_para2;
 
 //  std::array<double, 4> stateDerivative;
 
