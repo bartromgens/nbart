@@ -9,8 +9,8 @@ SimulatorController::SimulatorController()
     m_showBodies(true),
     m_showTrajectories(false),
     m_showField(false),
-    m_simulationSpeed(5.0),
-    m_stepsize(0.05)
+    m_simulationSpeed(10.0),
+    m_stepsize(0.005)
 {
 }
 
