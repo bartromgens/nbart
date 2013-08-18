@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 
+
 struct Color
 {
 	int r;
@@ -13,11 +14,13 @@ struct Color
 	int b;
 };
 
+
 struct Coordinate
 {
 	int x;
 	int y;
 };
+
 
 class Node
 {
