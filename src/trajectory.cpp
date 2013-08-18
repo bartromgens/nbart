@@ -23,11 +23,19 @@ Trajectory::addPoint(double x, double y)
 void
 Trajectory::draw()
 {
-  std::cout << "Trajectory::draw() - m_x.size(): " << m_x.size() << std::endl;
-  std::cout << "Trajectory::draw() - i < m_x.size()-1: " << (0 < m_x.size()-1) << std::endl;
-  for (std::size_t i = 0; i < m_x.size()-1; ++i)
+  if (m_x.size() < 2)
   {
-    std::cout << "Trajectory::draw() - in loop" << std::endl;
-    aalineRGBA(m_screen, m_x[i], m_y[i], m_x[i+1], m_y[i+1], (cos(i/m_lineColorRate)+1)*255/2.0, (sin(i/m_lineColorRate)+1)*255/2.0, 0, 255);
+    return;
+  }
+
+  for (int i = 0; i < m_x.size()-1; ++i)
+  {
+    int r = (cos(i/m_lineColorRate)+1)*255/2.0;
+    int g = (sin(i/m_lineColorRate)+1)*255/2.0;
+    int b = 0;
+    int a = 255;
+    aalineRGBA(m_screen, m_x[i], m_y[i], m_x[i+1], m_y[i+1], r, g, b, a);
+    aalineRGBA(m_screen, m_x[i]+1, m_y[i], m_x[i+1]+1, m_y[i+1], r, g, b, a);
+    aalineRGBA(m_screen, m_x[i]-1, m_y[i], m_x[i+1]-1, m_y[i+1], r, g, b, a);
   }
 }
