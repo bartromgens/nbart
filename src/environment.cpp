@@ -25,6 +25,7 @@ void
 Environment::addBody(Body* body)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
+  printState();
 
   m_bodies.push_back(body);
 }
@@ -34,6 +35,7 @@ void
 Environment::addMasslessBody(Body* body)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
+  printState();
 
   m_masslessBodies.push_back(body);
 }
@@ -43,6 +45,7 @@ void
 Environment::clearAllBodies()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
+  printState();
 
   m_bodies.clear();
   m_masslessBodies.clear();
@@ -131,40 +134,37 @@ Environment::updateState()
 }
 
 
-std::array<double, 4>
+const std::array<double, 4>&
 Environment::getStateDerivative(const std::array<double, 4>& x)
 {
-  double r;
-  double mass;
-  double x12[2];
+  m_stateDerivative.fill(0.0);
 
-  std::array<double, 4> stateDerivative;
-  stateDerivative.fill(0.0);
-
-  stateDerivative[2] = 0.0;
-  stateDerivative[3] = 0.0;
+//  m_stateDerivative[2] = 0.0;
+//  m_stateDerivative[3] = 0.0;
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
   {
     m_x2 = (*iter)->getState();
     if (m_x2[0] != x[0] && m_x2[1] != x[1])
     {
-      mass = (*iter)->getMass();
-      x12[0] = x[0]-m_x2[0];
-      x12[1] = x[1]-m_x2[1];
-      r = sqrt(x12[0]*x12[0]+x12[1]*x12[1]);
-      if (r > 10)
+      double y12 = x[1]-m_x2[1];
+      double x12 = x[0]-m_x2[0];
+      double r = sqrt(x12*x12+y12*y12);
+      if (r > 5)
       {
-        stateDerivative[2] -= (mass)/(r*r*r) * x12[0];
-        stateDerivative[3] -= (mass)/(r*r*r) * x12[1];
+        double r3 = r*r*r;
+        double mass = (*iter)->getMass();
+        const double c = mass/r3;
+        m_stateDerivative[2] -= c * x12;
+        m_stateDerivative[3] -= c * y12;
       }
     }
   }
 
-  stateDerivative[0] = x[2];
-  stateDerivative[1] = x[3];
+  m_stateDerivative[0] = x[2];
+  m_stateDerivative[1] = x[3];
 
-  return stateDerivative;
+  return m_stateDerivative;
 }
 
 
@@ -312,4 +312,14 @@ Environment::getLinearMomentum()
   }
 
   return linearMomentum;
+}
+
+
+void
+Environment::printState() const
+{
+  std::cout << "Environment state:" << std::endl;
+  std::cout << "bodies: " << m_bodies.size() << std::endl;
+  std::cout << "massless bodies: " << m_masslessBodies.size() << std::endl;
+
 }
