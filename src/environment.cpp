@@ -134,18 +134,16 @@ Environment::updateState()
 }
 
 
-const std::array<double, 4>&
+std::array<double, 4>
 Environment::getStateDerivative(const std::array<double, 4>& x)
 {
-  m_stateDerivative.fill(0.0);
-
-//  m_stateDerivative[2] = 0.0;
-//  m_stateDerivative[3] = 0.0;
+  std::array<double, 4> stateDerivative;
+  stateDerivative.fill(0.0);
 
   for (auto iter = m_bodies.begin(); iter != m_bodies.end(); iter++)
   {
     m_x2 = (*iter)->getState();
-    if (m_x2[0] != x[0] && m_x2[1] != x[1])
+    if (m_x2[0] != x[0])  // && m_x2[1] != x[1]
     {
       double y12 = x[1]-m_x2[1];
       double x12 = x[0]-m_x2[0];
@@ -155,16 +153,16 @@ Environment::getStateDerivative(const std::array<double, 4>& x)
         double r3 = r*r*r;
         double mass = (*iter)->getMass();
         const double c = mass/r3;
-        m_stateDerivative[2] -= c * x12;
-        m_stateDerivative[3] -= c * y12;
+        stateDerivative[2] -= c * x12;
+        stateDerivative[3] -= c * y12;
       }
     }
   }
 
-  m_stateDerivative[0] = x[2];
-  m_stateDerivative[1] = x[3];
+  stateDerivative[0] = x[2];
+  stateDerivative[1] = x[3];
 
-  return m_stateDerivative;
+  return stateDerivative;
 }
 
 

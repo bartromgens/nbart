@@ -22,7 +22,7 @@ public:
   void drawBodies();
   void drawTrajectories();
 
-  const std::array<double, 4>& getStateDerivative(const std::array<double, 4> &x0);
+  std::array<double, 4> getStateDerivative(const std::array<double, 4>& x0);
 
   double getFieldStrength(double x, double y);
   double getEnergy();
@@ -50,7 +50,7 @@ private:
   std::array<double, 2> m_para1;
   std::array<double, 2> m_para2;
 
-  std::array<double, 4> m_stateDerivative;
+//  std::array<double, 4> m_stateDerivative;
 
   mutable std::mutex m_mutex;
 };
