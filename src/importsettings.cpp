@@ -3,12 +3,19 @@
 
 #include "importsettings.hpp"
 
+#include <QFile>
+
 void
 import::importSettings(double* settings)
 {
+  std::string filename = "settings.txt";
+  if ( !QFile::exists(QString::fromStdString(filename)) )
+  {
+    std::cout << "Import settings failed, file " << filename << " does not exist!" << std::endl;
+  }
+
   std::string line;
   std::ifstream infile("settings.txt");
-
   for (int i = 0; i < 9; i++)
   {
     getline(infile, line);
