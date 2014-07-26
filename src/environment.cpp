@@ -14,6 +14,7 @@ Environment::Environment(SDL_Surface* screen)
     m_hres(import::getHres()),
     m_vres(import::getVres())
 {
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 
@@ -25,9 +26,8 @@ void
 Environment::addBody(Body* body)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  printState();
-
   m_bodies.push_back(body);
+  std::cout << __PRETTY_FUNCTION__ << " : N bodies: " << m_bodies.size() << std::endl;
 }
 
 
@@ -35,7 +35,6 @@ void
 Environment::addMasslessBody(Body* body)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  printState();
 
   m_masslessBodies.push_back(body);
 }
@@ -45,10 +44,10 @@ void
 Environment::clearAllBodies()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  printState();
-
   m_bodies.clear();
   m_masslessBodies.clear();
+
+  printState();
 }
 
 
@@ -147,12 +146,10 @@ Environment::getStateDerivative(const std::array<double, 4>& x)
     {
       double y12 = x[1]-m_x2[1];
       double x12 = x[0]-m_x2[0];
-      double r = sqrt(x12*x12+y12*y12);
-      if (r > 5)
+      if (std::fabs(x12 + y12) > 10)
       {
-        double r3 = r*r*r;
-        double mass = (*iter)->getMass();
-        const double c = mass/r3;
+        double r = sqrt(x12*x12+y12*y12);
+        const double c = (*iter)->getMass()/(r*r*r);
         stateDerivative[2] -= c * x12;
         stateDerivative[3] -= c * y12;
       }
@@ -319,5 +316,4 @@ Environment::printState() const
   std::cout << "Environment state:" << std::endl;
   std::cout << "bodies: " << m_bodies.size() << std::endl;
   std::cout << "massless bodies: " << m_masslessBodies.size() << std::endl;
-
 }
