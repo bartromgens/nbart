@@ -2,9 +2,24 @@ QT       += core gui
 
 TEMPLATE = app
 
-TARGET = nbart
 
-OBJECTS_DIR = tmp/
+# obj dirs for debug and release build
+CONFIG(debug, debug|release) {
+  OBJECTS_DIR = ./tmp/debug
+  MOC_DIR = ./tmp/debug
+  MAKEFILE = Makefile.debug
+  TARGET = nbart_debug
+} else {
+  OBJECTS_DIR = ./tmp/release
+  MOC_DIR = ./tmp/release
+  MAKEFILE = Makefile.release
+  TARGET = nbart
+}
+
+# location of generated files, do not add to version control
+UI_DIR = ./src/gui/generated
+
+CONFIG += silent # clean compile output
 
 INCLUDEPATH += ./src/
 DEPENDPATH = $$INCLUDEPATH
