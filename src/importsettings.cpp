@@ -5,6 +5,8 @@
 
 #include <QFile>
 
+#include <cassert>
+
 void
 import::importSettings(double* settings)
 {
@@ -12,10 +14,11 @@ import::importSettings(double* settings)
   if ( !QFile::exists(QString::fromStdString(filename)) )
   {
     std::cout << "Import settings failed, file " << filename << " does not exist!" << std::endl;
+    assert(false); // we cannot continue without a settings file at the moment
   }
 
   std::string line;
-  std::ifstream infile("settings.txt");
+  std::ifstream infile(filename);
   for (int i = 0; i < 9; i++)
   {
     getline(infile, line);
