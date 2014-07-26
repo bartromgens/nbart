@@ -28,11 +28,11 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-  std::cout << "MainWindow::~MainWindow() - START" << std::endl;
+  std::cout << "~MainWindow() - START" << std::endl;
 
   closeSimulator();
 
-  std::cout << "MainWindow::~MainWindow() - END" << std::endl;
+  std::cout << "~MainWindow() - END" << std::endl;
 }
 
 
