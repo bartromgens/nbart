@@ -15,6 +15,7 @@ Trajectory::Trajectory(SDL_Surface* screen)
 void
 Trajectory::addPoint(double x, double y)
 {
+//  std::cout << __PRETTY_FUNCTION__ << std::endl;
   m_x.push_back(x);
   m_y.push_back(y);
 }
@@ -28,7 +29,7 @@ Trajectory::draw()
     return;
   }
 
-  for (int i = 0; i < m_x.size()-1; ++i)
+  for (std::size_t i = 0; i < m_x.size()-1; ++i)
   {
     int r = (cos(i/m_lineColorRate)+1)*255/2.0;
     int g = (sin(i/m_lineColorRate)+1)*255/2.0;

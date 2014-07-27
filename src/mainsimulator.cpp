@@ -9,6 +9,7 @@
 #include "initialpattern.hpp"
 #include "node.hpp"
 #include "simulatorcontroller.h"
+#include "trajectory.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -17,10 +18,14 @@
 #include <iostream>
 #include <vector>
 
-int MainSimulator::nEnvironments = 10;
+int MainSimulator::nEnvironments = 1;
 
 MainSimulator::MainSimulator(std::shared_ptr<SimulatorController> controller)
-  : m_controller(controller)
+  : m_controller(controller),
+    m_bodies(),
+    m_drawableBodies(),
+    m_trajectories(),
+    m_massUserDefined(3.0)
 {
   m_screenWidth = import::getHres();
   m_screenHeight = import::getVres();
@@ -65,6 +70,8 @@ MainSimulator::run()
   const int H_TILES = m_screenWidth/TILE_SIZE;
   const int V_TILES = m_screenHeight/TILE_SIZE;
 
+  const int LINE_RATE = import::getLineRate();
+
   GravityField gravityField(V_TILES, H_TILES, TILE_SIZE, TILE_BORDER_SIZE);
 
   int startFPS = SDL_GetTicks();
@@ -83,29 +90,25 @@ MainSimulator::run()
     //Increment the frame counter
     frame++;
 
-    // While there's events to handle
-    handleKeyAndMouseEvents(environments, screen, mouseState);
+    if (m_controller->getPlay())
+    {
+      oneStep(environments);
+    }
 
     gf::apply_surface( 0, 0 , background, screen );
 
-    if (m_controller->getClear())
+    // While there's events to handle
+    handleKeyAndMouseEvents(environments, screen, mouseState);
+    updateBodyList(environments);
+
+    if ( frame%m_fps == 0)
     {
-      for (auto iter = environments.begin(); iter != environments.end(); ++iter)
-      {
-       (*iter)->clearAllBodies();
-      }
-      m_controller->setClear(false);
+      sortBodies(m_bodies, environments);
     }
 
-//    environment->printState();
-    if (m_controller->getPlay())
+    if (m_controller->getClear())
     {
-      double stepsize = m_controller->getStepSize();
-      for (auto iter = environments.begin(); iter != environments.end(); ++iter)
-      {
-        Environment* environment = *iter;
-        environment->oneStep(m_controller->getSimulationSpeed(), stepsize);
-      }
+      deleteAllBodies(environments);
     }
 
     // Draw Field
@@ -114,36 +117,43 @@ MainSimulator::run()
 //      gravityField.draw(screen, environment); // needs to work with vector of environments
     }
 
-    // Draw Trajectory
-    if (m_controller->getShowTrajectories())
+
+    for (auto iter = m_bodies.begin(); iter != m_bodies.end(); ++iter)
     {
-      for (auto iter = environments.begin(); iter != environments.end(); ++iter)
+      assert(m_drawableBodies.find(iter->second->getId()) != m_drawableBodies.end());
+      assert(m_trajectories.find(iter->second->getId()) != m_trajectories.end());
+      std::array<double, 4> x = iter->second->getState();
+      m_drawableBodies[iter->second->getId()]->setCenterPos(x[0], x[1]);
+
+      if ( (frame % (LINE_RATE)) == 0)
       {
-        (*iter)->drawTrajectories();
+        m_trajectories[iter->second->getId()]->addPoint(x[0], x[1]);
       }
     }
 
     // Draw Bodies
     if (m_controller->getShowBodies())
     {
-      for (auto iter = environments.begin(); iter != environments.end(); ++iter)
-      {
-        (*iter)->drawBodies();
-      }
+      drawBodies();
     }
 
-//    // Check for Collisions
-//    if (mergeBodies)
-//    {
-//      environment->mergeBodies();
-//    }
+    // Draw Trajectory
+    if (m_controller->getShowTrajectories())
+    {
+      std::cout << "show trajectories!" << std::endl;
+      for (auto iter = m_bodies.begin(); iter != m_bodies.end(); ++iter)
+      {
+        assert(m_trajectories.find(iter->second->getId()) != m_trajectories.end());
+        m_trajectories[iter->second->getId()]->draw();
+      }
+    }
 
     //Sleep the remaining frame time
     double timeleft = ( 1000.0 / m_fps ) - (SDL_GetTicks()-startFrameTime);
     if ( frame%m_fps == 0)
     {
       int timeFPSframes = SDL_GetTicks()-startFPS;
-      std::cout << "fps: " << round(m_fps/(timeFPSframes/1000.0)) << std::endl;
+      std::cout << "fps: " << round(m_fps/(timeFPSframes/1000.0)) << ", bodies: " << m_bodies.size() << std::endl;
       startFPS = SDL_GetTicks();
     }
 
@@ -166,16 +176,128 @@ MainSimulator::run()
 
 
 void
-MainSimulator::sortBodies(std::vector<Body*> bodies)
+MainSimulator::oneStep(std::vector<Environment*> environments)
 {
-  std::vector<std::vector<Body* >> bodyBuckets; // TODO BR: optimize
-  for (auto iter = bodies.begin(); iter != bodies.end(); ++iter)
+  double stepsize = m_controller->getStepSize();
+  for (auto iter = environments.begin(); iter != environments.end(); ++iter)
   {
-    Body* body = *iter;
-    const std::array<double, 4>& state = body->getState();
-
+    Environment* environment = *iter;
+    environment->oneStep(m_controller->getSimulationSpeed(), stepsize);
   }
 }
+
+
+void
+MainSimulator::drawBodies()
+{
+  for (auto iter = m_bodies.begin(); iter != m_bodies.end(); ++iter)
+  {
+    assert(m_drawableBodies.find(iter->second->getId()) != m_drawableBodies.end());
+    m_drawableBodies[iter->second->getId()]->draw();
+  }
+}
+
+
+void
+MainSimulator::updateBodyList(std::vector<Environment*> environments)
+{
+  m_bodies.clear();
+  for (auto iter = environments.begin(); iter != environments.end(); ++iter)
+  {
+    Environment* environment = *iter;
+    const std::list<Body*>& bodies = environment->getBodies();
+    for (auto iter = bodies.begin(); iter != bodies.end(); ++iter)
+    {
+      m_bodies[(*iter)->getId()] = *iter;
+    }
+  }
+}
+
+
+void
+MainSimulator::deleteAllBodies(std::vector<Environment*> environments)
+{
+  for (auto iter = environments.begin(); iter != environments.end(); ++iter)
+  {
+    (*iter)->clearAllBodies();
+    m_drawableBodies.clear();
+    m_trajectories.clear();
+    updateBodyList(environments);
+  }
+  m_controller->setClear(false);
+}
+
+
+Body*
+MainSimulator::createBody(Environment* environment, int mass, SDL_Surface* screen, std::string imageloc)
+{
+  Body* body = new Body(imageloc);
+  body->setMass(mass);
+  int radius = sqrt(mass*20);
+  body->setRadius(radius);
+  std::unique_ptr<Drawable> drawable = std::unique_ptr<Drawable>(new Drawable(screen, imageloc));
+  drawable->setSize(2*radius);
+  m_drawableBodies[body->getId()] = std::move(drawable);
+  m_trajectories[body->getId()].reset(new Trajectory(screen));
+  environment->addBody(body);
+  return body;
+}
+
+
+Body*
+MainSimulator::createMasslessBody(Environment* environment, SDL_Surface* screen, std::string imageloc)
+{
+  Body* body = new Body(imageloc);
+  environment->addMasslessBody(body);
+  m_drawableBodies[body->getId()].reset( new Drawable(screen, imageloc) );
+  return body;
+}
+
+
+void
+MainSimulator::sortBodies(std::map<std::size_t, const Body*> bodies, std::vector<Environment*> environments)
+{
+  int nBucketsPerDim = 1;
+  std::vector<std::vector<const Body*> > bodyBuckets(nBucketsPerDim*nBucketsPerDim, std::vector<const Body*>(0, 0)); // TODO BR: optimize
+//  std::cout << "sortBodies() - nBodies: " << bodies.size() << std::endl;
+  for (auto iter = bodies.begin(); iter != bodies.end(); ++iter)
+  {
+    const Body* body = iter->second;
+    const std::array<double, 4>& x = body->getState();
+    int width = std::floor(x[0]/(double(m_screenWidth)/nBucketsPerDim));
+    int height = std::floor(x[1]/(double(m_screenHeight)/nBucketsPerDim));
+    int bucket = height*nBucketsPerDim + width;
+    if ( bucket < 0 || bucket >= static_cast<int>(bodyBuckets.size()) )
+    {
+      continue;
+    }
+    assert(bucket < static_cast<int>(bodyBuckets.size()));
+    bodyBuckets[bucket].push_back(body);
+  }
+
+  for (auto iter = environments.begin(); iter != environments.end(); ++iter)
+  {
+    (*iter)->clearAllBodies();
+  }
+
+  unsigned int environNr = 0;
+  for (std::size_t i = 0; i < bodyBuckets.size(); ++i)
+  {
+    for (std::size_t j = 0; j < bodyBuckets[i].size(); ++j)
+    {
+      assert(environNr < environments.size());
+      environments[environNr]->addBody(const_cast<Body*>(bodyBuckets[i][j]));
+    }
+    environNr++;
+  }
+}
+
+//void
+//MainSimulator::filterBodiesByDistance(int distance_px)
+//{
+
+//}
+
 
 void
 MainSimulator::handleKeyAndMouseEvents(std::vector<Environment*> environments, SDL_Surface* screen, MouseState& mouseState)
@@ -192,7 +314,7 @@ MainSimulator::handleKeyAndMouseEvents(std::vector<Environment*> environments, S
 
 
 void
-MainSimulator::handleKeyEvent(SDL_Event event, std::vector<Environment*> environments, SDL_Surface* screen)
+MainSimulator::handleKeyEvent(SDL_Event event, std::vector<Environment*> /*environments*/, SDL_Surface* screen)
 {
   //If the user has Xed out the window
   if( event.type == SDL_QUIT )
@@ -275,8 +397,6 @@ MainSimulator::handleKeyEvent(SDL_Event event, std::vector<Environment*> environ
 void
 MainSimulator::handleMouseEvent(SDL_Event event, std::vector<Environment*> environments, SDL_Surface* screen, MouseState& mouseState)
 {
-  double newMass = 3.0;
-
   if( event.type == SDL_MOUSEBUTTONDOWN )
   {
     //If the left mouse button was pressed
@@ -292,11 +412,13 @@ MainSimulator::handleMouseEvent(SDL_Event event, std::vector<Environment*> envir
     }
     else if( event.button.button == SDL_BUTTON_WHEELUP )
     {
-      newMass *= 1.1;
+      std::cout << "Mouse Wheel Up..." << std::endl;
+      m_massUserDefined *= 1.1;
     }
     else if( event.button.button == SDL_BUTTON_WHEELDOWN )
     {
-      newMass *= 0.9;
+      std::cout << "Mouse Wheel Down..." << std::endl;
+      m_massUserDefined *= 0.9;
     }
   }
 
@@ -319,11 +441,12 @@ MainSimulator::handleMouseEvent(SDL_Event event, std::vector<Environment*> envir
     if ( event.button.button == SDL_BUTTON_LEFT)
     {
       double angle = 0.0;
-      for (std::size_t i = 0; i < environments.size(); ++i)
+//      for (std::size_t i = 0; i < environments.size(); ++i)
+      for (std::size_t i = 0; i < 1; ++i)
       {
         std::string imageFile;
-        int environmentNr = i%3;
-        switch (environmentNr)
+        int environmentNr = i%nEnvironments;
+        switch (environmentNr%3)
         {
           case 0:
           {
@@ -345,25 +468,24 @@ MainSimulator::handleMouseEvent(SDL_Event event, std::vector<Environment*> envir
             assert(false);
           }
         }
-        body = new Body(environments[environmentNr], screen, imageFile);
-        body->setMass(newMass);
-        body->setRadius(sqrt(newMass*20));
-        environments[environmentNr]->addBody(body);
+        body = createBody(environments[environmentNr], m_massUserDefined, screen, imageFile);
+//        environments[environmentNr]->addBody(body);
 
         double vx = (mouseState.m_mouseupX - mouseState.m_mousedownX) / 500.0;
         double vy = (mouseState.m_mouseupY - mouseState.m_mousedownY) / 500.0;
         body->setPosition(mouseState.m_mousedownX, mouseState.m_mousedownY);
-        body->setVelocity(vx*cos(angle), vy*sin(angle));
+//        body->setVelocity(vx*cos(angle), vy*sin(angle));
+        body->setVelocity(vx, vy);
         angle += (2.0*M_PI)/nEnvironments;
       }
 
     }
     else if ( event.button.button == SDL_BUTTON_RIGHT)
     {
-      body = new Body(environments[0], screen, "./data/greenball.png");
+      body = createMasslessBody(environments[0], screen, "./data/greenball.png");
       body->setMass(0.1);
       body->setRadius(sqrt(0.4*20));
-      environments[0]->addMasslessBody(body);
+//      environments[0]->addMasslessBody(body);v
 
       double vx = (mouseState.m_mouseupX - mouseState.m_mousedownX) / 500.0;
       double vy = (mouseState.m_mouseupY - mouseState.m_mousedownY) / 500.0;

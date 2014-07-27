@@ -25,14 +25,14 @@ initialpattern::random(double start, double end)
 
 // Orbiting Pattern
 void
-initialpattern::createPattern1(Environment* environment, SDL_Surface* screen, int nBodies, double mass)
+initialpattern::createPattern1(Environment* environment, int nBodies, double mass)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
   for (int i = 0; i < nBodies; i++)
   {
-    Body* body = new Body(environment, screen, "./data/blurball.png");
+    Body* body = new Body("./data/blurball.png");
     environment->addBody(body);
     body->setMass( mass );
     body->setRadius(sqrt(mass*20));
@@ -45,14 +45,14 @@ initialpattern::createPattern1(Environment* environment, SDL_Surface* screen, in
 
 // Random pattern
 void
-initialpattern::createPattern2(Environment* environment, SDL_Surface* screen, int nBodies)
+initialpattern::createPattern2(Environment* environment, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
   for (int i = 0; i < nBodies; i++)
   {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
+    Body* body = new Body("./data/whiteball.png");
     environment->addBody(body);
     double mass = random(0.01, 0.1);
     body->setMass( mass );
@@ -64,14 +64,14 @@ initialpattern::createPattern2(Environment* environment, SDL_Surface* screen, in
 
 // Spiral Pattern
 void
-initialpattern::createPattern3(Environment* environment, SDL_Surface* screen, int nBodies)
+initialpattern::createPattern3(Environment* environment, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
   for (int i = 0; i < nBodies; i++)
   {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
+    Body* body = new Body("./data/whiteball.png");
     environment->addBody(body);
     double mass = random(50/nBodies, 50/nBodies);
     body->setMass( mass );
@@ -89,13 +89,13 @@ initialpattern::createPattern3(Environment* environment, SDL_Surface* screen, in
 
 // Strange numero uno
 void
-initialpattern::createPattern4(Environment* environment, SDL_Surface* screen, int nBodies)
+initialpattern::createPattern4(Environment* environment, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
   for (int i = 0; i < nBodies; i++) {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
+    Body* body = new Body("./data/whiteball.png");
     environment->addBody(body);
     double mass = random(3, 3);
     body->setMass( mass );
@@ -110,14 +110,14 @@ initialpattern::createPattern4(Environment* environment, SDL_Surface* screen, in
 
 // Strange numero uno
 void
-initialpattern::createPattern5(Environment* environment, SDL_Surface* screen, int nBodies)
+initialpattern::createPattern5(Environment* environment, int nBodies)
 {
   const int SCREEN_WIDTH = import::getHres();
   const int SCREEN_HEIGHT = import::getVres();
 
   for (int i = 0; i < nBodies; i++)
   {
-    Body* body = new Body(environment, screen, "./data/whiteball.png");
+    Body* body = new Body("./data/whiteball.png");
     environment->addBody(body);
 
     double mass = random(1, 10);

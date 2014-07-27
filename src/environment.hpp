@@ -2,8 +2,10 @@
 #define ENVIRONMENT_H_
 
 #include <array>
+#include <list>
 #include <mutex>
 #include <vector>
+#include <thread>
 
 #include "body.hpp"
 
@@ -13,14 +15,14 @@ public:
   ~Environment();
 
   void addBody(Body* body);
+  void removeBody(Body* body);
   void addMasslessBody(Body* body);
-  void mergeBodies();
+  const std::list<Body*>& getBodies() const;
+
+//  void mergeBodies();
   void clearAllBodies();
 
   void oneStep(double tEnd, double stepsize);
-
-  void drawBodies();
-  void drawTrajectories();
 
   std::array<double, 4> getStateDerivative(const std::array<double, 4>& x0);
 
@@ -30,16 +32,14 @@ public:
 
   void printState() const;
 
-
 protected:
 
 private:
   void oneStepImpl(double tEnd, double stepsize);
-  void updateState();
 
 private:
   SDL_Surface* m_screen;
-  std::vector<Body*> m_bodies;
+  std::list<Body*> m_bodies;
   std::vector<Body*> m_masslessBodies;
   int m_hres;
   int m_vres;
@@ -53,6 +53,10 @@ private:
 //  std::array<double, 4> m_stateDerivative;
 
   mutable std::mutex m_mutex;
+
+  std::thread* m_thread;
+  unsigned int m_nStep;
+  unsigned int m_nStepReal;
 };
 
 #endif /* ENVIRONMENT_H_ */

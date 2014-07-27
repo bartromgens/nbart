@@ -60,7 +60,7 @@ gf::init(SDL_Surface* screen, std::string windowtitle)
   }
 
   // Set up the screen
-  const SDL_VideoInfo* vidinfo = SDL_GetVideoInfo();
+//  const SDL_VideoInfo* vidinfo = SDL_GetVideoInfo();
   if (import::getFullscreen() == 1)
   {
     screen = SDL_SetVideoMode( import::getHres(), import::getVres(), 32, SDL_FULLSCREEN|SDL_HWSURFACE );
