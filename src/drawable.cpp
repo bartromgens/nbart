@@ -2,16 +2,15 @@
 #include "globfunctions.hpp"
 
 
-Drawable::Drawable(SDL_Surface* screen, std::string imageloc)
+Drawable::Drawable(SDL_Surface* screen, std::string imageloc) :
+  m_screen(screen),
+  m_center(0, 0)
 {
-  this->screen = screen;
-  center.x = 0;
-  center.y = 0;
 
   loadSurface(imageloc);
-  drawablezoomsurf = rotozoomSurface(drawablesurf, 0.0, 1, 1);
-  pos.w = drawablezoomsurf->w;
-  pos.h = drawablezoomsurf->h;
+  m_drawablezoomsurf = rotozoomSurface(m_drawablesurf, 0.0, 1, 1);
+  m_pos.w = m_drawablezoomsurf->w;
+  m_pos.h = m_drawablezoomsurf->h;
 
   setTopLeftPos();
 }
@@ -19,8 +18,9 @@ Drawable::Drawable(SDL_Surface* screen, std::string imageloc)
 
 Drawable::~Drawable()
 {
-  SDL_FreeSurface(drawablesurf);
-  SDL_FreeSurface(drawablezoomsurf);
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
+  SDL_FreeSurface(m_drawablesurf);
+  SDL_FreeSurface(m_drawablezoomsurf);
 }
 
 
@@ -28,43 +28,43 @@ void
 Drawable::draw()
 {
   setTopLeftPos();
-  SDL_BlitSurface(drawablezoomsurf, NULL, screen, &pos);
+  SDL_BlitSurface(m_drawablezoomsurf, NULL, m_screen, &m_pos);
 }
 
 
 void
 Drawable::loadSurface(std::string imageloc)
 {
-  drawablesurf = gf::load_image( imageloc , true );
+  m_drawablesurf = gf::load_image( imageloc , true );
 }
 
 
 void
 Drawable::setTopLeftPos()
 {
-  pos.x = center.x - pos.w*0.5;
-  pos.y = center.y - pos.h*0.5;
+  m_pos.x = m_center.x() - m_pos.w*0.5;
+  m_pos.y = m_center.y() - m_pos.h*0.5;
 }
 
 
 void
 Drawable::setCenterPos(int x, int y)
 {
-  center.x = x;
-  center.y = y;
+  m_center.setX(x);
+  m_center.setY(y);
 }
 
 
 void
 Drawable::moveCenterPos(int dx, int dy)
 {
-  setCenterPos(center.x + dx, center.y + dy);
+  setCenterPos(m_center.x() + dx, m_center.y() + dy);
 }
 
 
 void
 Drawable::setSize(int w)
 {
-  double zoomfac = (double)w/pos.w;
-  drawablezoomsurf = rotozoomSurface(drawablesurf, 0.0, zoomfac, 1);
+  double zoomfac = (double)w/m_pos.w;
+  m_drawablezoomsurf = rotozoomSurface(m_drawablesurf, 0.0, zoomfac, 1);
 }

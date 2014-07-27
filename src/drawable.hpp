@@ -7,6 +7,8 @@
 #include "SDL/SDL.h"
 #include "SDL_rotozoom.h"
 
+#include <QPoint>
+
 
 class Drawable
 {
@@ -22,13 +24,12 @@ public:
   void setSize(int w);
 
 private:
-  SDL_Surface* drawablesurf;
-  SDL_Surface* drawablezoomsurf;
-  SDL_Surface* screen;
-  int midx, midy;
-  std::string imageloc;
+  SDL_Surface* m_drawablesurf;
+  SDL_Surface* m_drawablezoomsurf;
+  SDL_Surface* m_screen;
 
-  SDL_Rect pos, center;
+  SDL_Rect m_pos;
+  QPoint m_center;
 };
 
 #endif /* DRAWABLE_H_ */
