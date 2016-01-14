@@ -4,9 +4,14 @@
 #include "simulatorcontroller.h"
 #include "simulationsettingswidget.h"
 
+#include <QAction>
+#include <QMenuBar>
+#include <QToolBar>
+
 #include <cassert>
 #include <iostream>
 #include <thread>
+
 
 MainWindow::MainWindow()
   : QMainWindow(),

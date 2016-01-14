@@ -140,7 +140,7 @@ MainSimulator::run()
     // Draw Trajectory
     if (m_controller->getShowTrajectories())
     {
-      std::cout << "show trajectories!" << std::endl;
+//      std::cout << "show trajectories!" << std::endl;
       for (auto iter = m_bodies.begin(); iter != m_bodies.end(); ++iter)
       {
         assert(m_trajectories.find(iter->second->getId()) != m_trajectories.end());
