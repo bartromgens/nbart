@@ -1,0 +1,11 @@
+*.o
+moc_*
+
+Makefile*
+
+ui_*
+
+nbart
+nbart_debug
+
+*.pro.user
